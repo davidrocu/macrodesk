@@ -467,35 +467,36 @@ function setStep(n, state) {
   el.textContent = (state==='done'?'✓ ':state==='run'?'▶ ':'○ ') + text;
 }
 
-// ── API CALL with web search ──
-async function callAI(prompt, maxTokens=1000, useWebSearch=false) {
-  const body = {
-    model: 'anthropic/claude-3-haiku',
-    max_tokens: maxTokens,
-    temperature: 0,
-    messages: [{ role:'user', content: prompt }]
-  };
-  if (useWebSearch) {
-    body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
-  }
+// ── API CALL ──
+async function callAI(prompt, maxTokens=1000) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method:'POST',
     headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}`, 'HTTP-Referer':location.href, 'X-Title':'MacroDesk' },
-    body: JSON.stringify(body)
+    body: JSON.stringify({
+      model: 'anthropic/claude-3-5-haiku-20241022',
+      max_tokens: maxTokens,
+      temperature: 0,
+      messages: [{ role:'user', content: prompt }]
+    })
   });
   if (!r.ok) { const e=await r.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${r.status}`); }
   const d = await r.json();
-  // Extract text from content array or string
   let txt = '';
-  const content = d.choices[0].message.content;
-  if (Array.isArray(content)) {
-    txt = content.filter(b=>b.type==='text').map(b=>b.text).join('');
-  } else if (typeof content === 'string') {
-    txt = content;
+  try {
+    const msg = d.choices[0].message;
+    if (Array.isArray(msg.content)) {
+      txt = msg.content.filter(b=>b&&b.type==='text').map(b=>b.text).join('');
+    } else {
+      txt = String(msg.content || '');
+    }
+  } catch(pe) {
+    throw new Error('API error: ' + JSON.stringify(d).slice(0,200));
   }
+  if (!txt.trim()) throw new Error('Respuesta vacia');
   txt = txt.trim();
   const a=txt.indexOf('{'), b=txt.lastIndexOf('}');
   if(a!==-1&&b!==-1) txt=txt.slice(a,b+1);
+  else throw new Error('La IA no devolvió JSON válido');
   txt=txt.replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/,(\s*[}\]])/g,'$1').replace(/[\x00-\x09\x0b\x0c\x0e-\x1f]/g,' ');
   return JSON.parse(txt);
 }
@@ -519,7 +520,7 @@ async function generateAnalysis() {
     const p1 = callAI(`${BASE}
 Busca en internet noticias macro y geopoliticas de HOY que afecten EUR/USD, GBP/USD y DXY. Aranceles, Fed, BCE, BoE, geopolitica, datos economicos, China, petroleo, guerra comercial.
 Devuelve SOLO:
-{"riesgo":"ALTO","noticias_hoy":[{"titular":"titular real noticia hoy","impacto":"ALTO","par_afectado":"EUR/USD","efecto_divisa":"USD_SUBE","detalle":"efecto concreto en mercado"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_BAJA","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"TODOS","efecto_divisa":"VOLATILIDAD","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"MEDIO","par_afectado":"EUR/USD","efecto_divisa":"EUR_SUBE","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"MEDIO","par_afectado":"DXY","efecto_divisa":"USD_BAJA","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_SUBE","detalle":"efecto concreto"}]}`, 1200, true);
+{"riesgo":"ALTO","noticias_hoy":[{"titular":"titular real noticia hoy","impacto":"ALTO","par_afectado":"EUR/USD","efecto_divisa":"USD_SUBE","detalle":"efecto concreto en mercado"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_BAJA","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"TODOS","efecto_divisa":"VOLATILIDAD","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"MEDIO","par_afectado":"EUR/USD","efecto_divisa":"EUR_SUBE","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"MEDIO","par_afectado":"DXY","efecto_divisa":"USD_BAJA","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_SUBE","detalle":"efecto concreto"}]}`, 1200);
 
     // ── P2: BIAS ──
     setStep(2,'run');
@@ -556,7 +557,7 @@ Bancos centrales reales y proximos catalizadores con fechas:
     const parsed = { ...r1, ...r2, ...r3, ...r4, ...r5 };
     localStorage.setItem(CACHE_KEY, JSON.stringify({data:parsed, ts:Date.now()}));
     renderDashboard(parsed);
-    setStatus('ACTUALIZADO', true);
+    setStatus('ACTUALIZADO');
 
   } catch(e) {
     console.error(e);
