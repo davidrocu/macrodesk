@@ -502,6 +502,8 @@ async function callAI(prompt, maxTokens=1000) {
 }
 
 async function generateAnalysis() {
+  // Always clear cache so every click generates fresh analysis
+  localStorage.removeItem(CACHE_KEY);
   const btn = document.getElementById('refresh-btn');
   btn.disabled = true;
   document.getElementById('loading-state').style.display = 'block';
@@ -510,6 +512,8 @@ async function generateAnalysis() {
   document.getElementById('error-state').style.display = 'none';
   for(let i=1;i<=5;i++) setStep(i,'');
   setStatus('ANALIZANDO...', false);
+  // Always clear cache so every click generates fresh analysis
+  localStorage.removeItem(CACHE_KEY);
 
   const today = new Date().toLocaleDateString('es-ES',{year:'numeric',month:'long',day:'numeric'});
   const BASE = `Hoy es ${today}. Devuelve SOLO JSON valido puro. Sin backticks. Sin texto adicional. Comillas dobles rectas. Sin comas finales. Strings cortos, max 15 palabras.`;
