@@ -467,30 +467,22 @@ function setStep(n, state) {
   el.textContent = (state==='done'?'✓ ':state==='run'?'▶ ':'○ ') + text;
 }
 
-// ── PRECIOS REALES ──
+// ── PRECIOS REALES via Frankfurter API (sin CORS) ──
 async function fetchPrecios() {
-  const pairs = [
-    { symbol: 'DX-Y.NYB', label: 'DXY' },
-    { symbol: 'EURUSD=X', label: 'EUR/USD' },
-    { symbol: 'GBPUSD=X', label: 'GBP/USD' }
-  ];
   const result = {};
-  await Promise.all(pairs.map(async ({symbol, label}) => {
-    // Try multiple endpoints
-    const endpoints = [
-      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`,
-      `https://query2.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`
-    ];
-    for (const url of endpoints) {
-      try {
-        const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
-        if (!r.ok) continue;
-        const d = await r.json();
-        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-        if (price) { result[label] = price.toFixed(label === 'DXY' ? 2 : 4); break; }
-      } catch(e) { continue; }
+  try {
+    // EUR/USD y GBP/USD via Frankfurter (gratuito, sin CORS)
+    const r = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP');
+    const d = await r.json();
+    if (d.rates) {
+      const eurusd = (1 / d.rates.EUR).toFixed(4);
+      const gbpusd = (1 / d.rates.GBP).toFixed(4);
+      result['EUR/USD'] = eurusd;
+      result['GBP/USD'] = gbpusd;
     }
-  }));
+  } catch(e) {
+    console.warn('No se pudieron obtener precios Frankfurter');
+  }
   return result;
 }
 
@@ -500,7 +492,7 @@ async function callAI(prompt, maxTokens=1000) {
     method:'POST',
     headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}`, 'HTTP-Referer':location.href, 'X-Title':'MacroDesk' },
     body: JSON.stringify({
-      model: 'perplexity/sonar',
+      model: 'anthropic/claude-3.5-haiku',
       max_tokens: maxTokens,
       temperature: 0,
       messages: [{ role:'user', content: prompt }]
