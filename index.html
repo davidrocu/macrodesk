@@ -467,6 +467,25 @@ function setStep(n, state) {
   el.textContent = (state==='done'?'✓ ':state==='run'?'▶ ':'○ ') + text;
 }
 
+// ── PRECIOS REALES (Yahoo Finance via proxy) ──
+async function fetchPrecios() {
+  const symbols = ['DX-Y.NYB', 'EURUSD=X', 'GBPUSD=X'];
+  const labels  = ['DXY', 'EUR/USD', 'GBP/USD'];
+  const result  = {};
+  await Promise.all(symbols.map(async (sym, i) => {
+    try {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1m&range=1d`;
+      const r = await fetch(url);
+      const d = await r.json();
+      const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
+      if (price) result[labels[i]] = price.toFixed(4);
+    } catch(e) {
+      console.warn('No se pudo obtener precio de', labels[i]);
+    }
+  }));
+  return result;
+}
+
 // ── API CALL ──
 async function callAI(prompt, maxTokens=1000) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -516,7 +535,21 @@ async function generateAnalysis() {
   localStorage.removeItem(CACHE_KEY);
 
   const today = new Date().toLocaleDateString('es-ES',{year:'numeric',month:'long',day:'numeric'});
-  const BASE = `Hoy es ${today}. Devuelve SOLO JSON valido puro. Sin backticks. Sin texto adicional. Comillas dobles rectas. Sin comas finales. Strings cortos, max 15 palabras.`;
+
+  // Fetch real prices first
+  let precios = {};
+  try {
+    precios = await fetchPrecios();
+    console.log('Precios reales:', precios);
+  } catch(e) {
+    console.warn('No se pudieron obtener precios reales');
+  }
+
+  const preciosTexto = Object.keys(precios).length > 0
+    ? `Precios reales AHORA MISMO: DXY=${precios['DXY']||'N/A'}, EUR/USD=${precios['EUR/USD']||'N/A'}, GBP/USD=${precios['GBP/USD']||'N/A'}. USA ESTOS PRECIOS EXACTOS en tu analisis, no inventes otros.`
+    : '';
+
+  const BASE = `Hoy es ${today}. ${preciosTexto} Devuelve SOLO JSON valido puro. Sin backticks. Sin texto adicional. Comillas dobles rectas. Sin comas finales. Strings cortos, max 15 palabras.`;
 
   try {
     // ── P1: Noticias con web search ──
