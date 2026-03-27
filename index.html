@@ -467,20 +467,28 @@ function setStep(n, state) {
   el.textContent = (state==='done'?'✓ ':state==='run'?'▶ ':'○ ') + text;
 }
 
-// ── PRECIOS REALES (Yahoo Finance via proxy) ──
+// ── PRECIOS REALES ──
 async function fetchPrecios() {
-  const symbols = ['DX-Y.NYB', 'EURUSD=X', 'GBPUSD=X'];
-  const labels  = ['DXY', 'EUR/USD', 'GBP/USD'];
-  const result  = {};
-  await Promise.all(symbols.map(async (sym, i) => {
-    try {
-      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1m&range=1d`;
-      const r = await fetch(url);
-      const d = await r.json();
-      const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-      if (price) result[labels[i]] = price.toFixed(4);
-    } catch(e) {
-      console.warn('No se pudo obtener precio de', labels[i]);
+  const pairs = [
+    { symbol: 'DX-Y.NYB', label: 'DXY' },
+    { symbol: 'EURUSD=X', label: 'EUR/USD' },
+    { symbol: 'GBPUSD=X', label: 'GBP/USD' }
+  ];
+  const result = {};
+  await Promise.all(pairs.map(async ({symbol, label}) => {
+    // Try multiple endpoints
+    const endpoints = [
+      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`,
+      `https://query2.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`
+    ];
+    for (const url of endpoints) {
+      try {
+        const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (!r.ok) continue;
+        const d = await r.json();
+        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        if (price) { result[label] = price.toFixed(label === 'DXY' ? 2 : 4); break; }
+      } catch(e) { continue; }
     }
   }));
   return result;
@@ -492,10 +500,9 @@ async function callAI(prompt, maxTokens=1000) {
     method:'POST',
     headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}`, 'HTTP-Referer':location.href, 'X-Title':'MacroDesk' },
     body: JSON.stringify({
-      model: 'anthropic/claude-3.5-haiku',
+      model: 'anthropic/claude-3.5-haiku:online',
       max_tokens: maxTokens,
       temperature: 0,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
       messages: [{ role:'user', content: prompt }]
     })
   });
