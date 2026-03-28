@@ -13,7 +13,6 @@
     --surface2: #141720;
     --border: #1c1f28;
     --accent: #c8f135;
-    --accent2: #ff5c3a;
     --accent3: #38bdf8;
     --text: #e2e5ef;
     --muted: #4a5060;
@@ -23,8 +22,8 @@
     --warn: #fbbf24;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'Syne',sans-serif; min-height:100vh; }
   body::after { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:9999; }
 
   /* GATE */
@@ -44,7 +43,7 @@
   .gate-error { font-family:'Space Mono',monospace; font-size:11px; color:var(--down); margin-top:10px; display:none; }
 
   /* HEADER */
-  header { border-bottom:1px solid var(--border); padding:16px 28px; position:sticky; top:0; background:rgba(8,10,13,0.97); backdrop-filter:blur(16px); z-index:100; display:flex; align-items:center; justify-content:space-between; }
+  header { border-bottom:1px solid var(--border); padding:14px 28px; position:sticky; top:0; background:rgba(8,10,13,0.97); backdrop-filter:blur(16px); z-index:100; display:flex; align-items:center; justify-content:space-between; }
   .logo { font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.15em; color:var(--accent); }
   .logo span { color:var(--muted); }
   .header-right { display:flex; align-items:center; gap:20px; }
@@ -58,23 +57,24 @@
   .logout-btn { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); background:none; border:none; cursor:pointer; letter-spacing:0.1em; }
   .logout-btn:hover { color:var(--down); }
 
-  main { padding:0 28px 40px; max-width:1400px; margin:0 auto; }
+  main { padding:0 28px 60px; max-width:1300px; margin:0 auto; }
 
   /* HERO */
-  .hero { padding:40px 0 32px; display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end; border-bottom:1px solid var(--border); }
-  .hero-eyebrow { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; margin-bottom:14px; }
-  .hero h1 { font-size:clamp(28px,4vw,52px); font-weight:800; letter-spacing:-0.025em; line-height:1.0; }
+  .hero { padding:36px 0 28px; display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end; border-bottom:1px solid var(--border); }
+  .hero-eyebrow { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
+  .hero h1 { font-size:clamp(26px,3.5vw,46px); font-weight:800; letter-spacing:-0.025em; line-height:1.0; }
   .hero h1 em { font-style:normal; color:var(--accent); }
   .hero-meta { text-align:right; }
-  .hero-date { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.1em; margin-bottom:8px; }
+  .hero-date { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.1em; margin-bottom:8px; }
   .risk-pill { display:inline-flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.12em; padding:5px 12px; border-radius:2px; }
   .risk-high { background:rgba(248,113,113,0.1); color:var(--down); border:1px solid rgba(248,113,113,0.25); }
   .risk-med  { background:rgba(251,191,36,0.1); color:var(--warn); border:1px solid rgba(251,191,36,0.25); }
   .risk-low  { background:rgba(74,222,128,0.1); color:var(--up); border:1px solid rgba(74,222,128,0.25); }
+  @media(max-width:700px){ .hero { grid-template-columns:1fr; } .hero-meta { text-align:left; } }
 
   /* LOADING */
   #loading-state { padding:80px 0; text-align:center; display:none; }
-  .loader-ring { width:48px; height:48px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 20px; }
+  .loader-ring { width:44px; height:44px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 20px; }
   @keyframes spin { to { transform:rotate(360deg); } }
   .loader-text { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.15em; color:var(--muted2); }
   .loader-sub { font-size:12px; color:var(--muted); margin-top:8px; }
@@ -84,192 +84,119 @@
   .loader-step.running { color:var(--accent); }
 
   #dashboard-content { display:none; }
-
-  /* ══ BIAS DEL DÍA ══ */
-  #bias-panel { margin-top:28px; border:1px solid var(--border); background:var(--surface); animation:fadeUp 0.5s ease both; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-  .bias-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--border); background:var(--surface2); flex-wrap:wrap; gap:10px; }
-  .bias-header-left { display:flex; align-items:center; gap:12px; }
-  .bias-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; }
-  .bias-sesion { font-family:'Space Mono',monospace; font-size:10px; color:var(--accent3); }
-  .bias-updated { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); }
-  .bias-body { display:grid; grid-template-columns:1fr 1fr 1fr 1.5fr; gap:1px; background:var(--border); }
-  @media(max-width:1000px){ .bias-body { grid-template-columns:1fr 1fr; } }
-  @media(max-width:560px){ .bias-body { grid-template-columns:1fr; } }
-  .bias-instrument { background:var(--surface); padding:22px 20px; position:relative; overflow:hidden; }
-  .bias-instrument::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-  .bias-instrument.bull::before { background:var(--up); }
-  .bias-instrument.bear::before { background:var(--down); }
-  .bias-instrument.neut::before { background:var(--warn); }
-  .bias-inst-name { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.15em; margin-bottom:8px; }
-  .bias-verdict { font-size:20px; font-weight:800; letter-spacing:-0.01em; margin-bottom:4px; }
-  .bias-verdict.bull { color:var(--up); }
-  .bias-verdict.bear { color:var(--down); }
-  .bias-verdict.neut { color:var(--warn); }
-  .bias-confidence { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); margin-bottom:8px; }
-  .bias-conf-bar { height:3px; background:var(--border); border-radius:2px; margin-bottom:12px; overflow:hidden; }
-  .bias-conf-fill { height:100%; border-radius:2px; }
-  .bias-inst-reason { font-size:11px; color:var(--muted2); line-height:1.6; margin-bottom:10px; }
-  .bias-accion { font-family:'Space Mono',monospace; font-size:9px; padding:5px 10px; border-radius:2px; display:inline-block; }
-  .bias-accion.bull { background:rgba(74,222,128,0.08); color:var(--up); border:1px solid rgba(74,222,128,0.2); }
-  .bias-accion.bear { background:rgba(248,113,113,0.08); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
-  .bias-accion.neut { background:rgba(251,191,36,0.08); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
-  .bias-summary { background:var(--bg); padding:22px 20px; display:flex; flex-direction:column; gap:12px; }
-  .bias-summary-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); }
-  .bias-summary-text { font-size:12px; color:var(--muted2); line-height:1.7; flex:1; }
-  .bias-regla { font-family:'Space Mono',monospace; font-size:10px; color:var(--accent); padding:10px 12px; border-left:2px solid var(--accent); background:rgba(200,241,53,0.04); line-height:1.5; }
-
-  /* ══ NOTICIAS ══ */
-  #noticias-panel { margin-top:16px; border:1px solid var(--border); background:var(--surface); animation:fadeUp 0.5s ease 0.1s both; }
-  .noticias-header { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-bottom:1px solid var(--border); background:var(--surface2); }
-  .noticias-title { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); display:flex; align-items:center; gap:8px; }
-  .noticias-title::before { content:'●'; color:var(--accent); font-size:7px; animation:pulse 2s infinite; }
-  .noticias-ts { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); }
-  .noticias-list { list-style:none; }
-  .noticia-item { display:grid; grid-template-columns:56px 1fr 90px; gap:14px; align-items:start; padding:13px 20px; border-bottom:1px solid rgba(28,31,40,0.5); }
-  .noticia-item:last-child { border-bottom:none; }
-  .noticia-impacto { font-family:'Space Mono',monospace; font-size:9px; padding:3px 5px; border-radius:2px; text-align:center; margin-top:1px; line-height:1.4; }
-  .noticia-titular { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; line-height:1.4; }
-  .noticia-detalle { font-size:11px; color:var(--muted2); line-height:1.6; }
-  .noticia-efecto { font-family:'Space Mono',monospace; font-size:10px; padding:4px 8px; border-radius:2px; text-align:center; margin-top:2px; white-space:nowrap; }
-  .efecto-up   { color:var(--up);   background:rgba(74,222,128,0.06);  border:1px solid rgba(74,222,128,0.15); }
-  .efecto-down { color:var(--down); background:rgba(248,113,113,0.06); border:1px solid rgba(248,113,113,0.15); }
-  .efecto-warn { color:var(--warn); background:rgba(251,191,36,0.06);  border:1px solid rgba(251,191,36,0.15); }
-  @media(max-width:700px){ .noticia-item { grid-template-columns:46px 1fr; } .noticia-efecto { display:none; } }
-
-  /* TABS */
-  .tabs-wrap { display:flex; gap:0; border-bottom:1px solid var(--border); margin-top:24px; overflow-x:auto; }
-  .tab { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:12px 20px; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; transition:all 0.2s; white-space:nowrap; background:none; border-top:none; border-left:none; border-right:none; }
-  .tab:hover { color:var(--text); }
-  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
-  .tab-content { display:none; padding-top:1px; }
-  .tab-content.active { display:block; }
-
-  /* GRIDS */
-  .grid { display:grid; gap:1px; background:var(--border); margin-top:1px; }
-  .g2 { grid-template-columns:repeat(2,1fr); }
-  .g3 { grid-template-columns:repeat(3,1fr); }
-  .g4 { grid-template-columns:repeat(4,1fr); }
-  @media(max-width:1100px){ .g4 { grid-template-columns:repeat(2,1fr); } }
-  @media(max-width:900px){ .g3 { grid-template-columns:repeat(2,1fr); } }
-  @media(max-width:580px){ .g2,.g3,.g4 { grid-template-columns:1fr; } }
-  .card { background:var(--surface); padding:24px; animation:fadeUp 0.4s ease both; }
-  .card:nth-child(1){animation-delay:0.05s} .card:nth-child(2){animation-delay:0.1s}
-  .card:nth-child(3){animation-delay:0.15s} .card:nth-child(4){animation-delay:0.2s}
-  .card-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-  .card-label::after { content:''; flex:1; height:1px; background:var(--border); }
-  .card-title { font-size:16px; font-weight:800; letter-spacing:-0.01em; margin-bottom:10px; line-height:1.3; }
-  .card-body { font-size:13px; color:var(--muted2); line-height:1.75; }
-  .card-body strong { color:var(--text); }
-
-  /* MACRO GLOBAL */
-  .country-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
-  @media(max-width:900px){ .country-grid { grid-template-columns:repeat(2,1fr); } }
-  @media(max-width:580px){ .country-grid { grid-template-columns:1fr; } }
-  .country-card { background:var(--surface); padding:20px; }
-  .country-flag { font-size:22px; margin-bottom:8px; }
-  .country-name { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.15em; color:var(--muted); margin-bottom:6px; }
-  .country-status { font-size:13px; font-weight:700; margin-bottom:6px; }
-  .country-detail { font-size:11px; color:var(--muted2); line-height:1.6; }
-  .country-badge { display:inline-block; font-family:'Space Mono',monospace; font-size:9px; padding:2px 7px; border-radius:2px; margin-top:8px; }
-  .badge-up   { background:rgba(74,222,128,0.08); color:var(--up); border:1px solid rgba(74,222,128,0.2); }
-  .badge-down { background:rgba(248,113,113,0.08); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
-  .badge-warn { background:rgba(251,191,36,0.08); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
-  .badge-blue { background:rgba(56,189,248,0.08); color:var(--accent3); border:1px solid rgba(56,189,248,0.2); }
-
-  /* DXY */
-  .dxy-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:1px; }
-  @media(max-width:900px){ .dxy-grid { grid-template-columns:1fr; } }
-  .dxy-card { background:var(--surface); padding:22px 24px; }
-  .dxy-name { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.15em; margin-bottom:4px; }
-  .dxy-precio { font-family:'Space Mono',monospace; font-size:28px; font-weight:700; color:var(--accent3); margin-bottom:6px; }
-  .dxy-badge { font-family:'Space Mono',monospace; font-size:9px; padding:3px 8px; border-radius:2px; display:inline-block; margin-bottom:12px; }
-  .dxy-niveles { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); margin:12px 0; }
-  .dxy-nivel { background:var(--bg); padding:8px 10px; }
-  .dxy-nivel-lbl { font-family:'Space Mono',monospace; font-size:8px; color:var(--muted); letter-spacing:0.1em; margin-bottom:3px; }
-  .dxy-nivel-val { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; }
-  .dxy-nivel-val.s { color:var(--down); }
-  .dxy-nivel-val.r { color:var(--warn); }
-  .dxy-analisis { font-size:11px; color:var(--muted2); line-height:1.65; }
-
-  /* PARES */
-  .pair-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-  .pair-name { font-family:'Space Mono',monospace; font-size:24px; font-weight:700; color:var(--accent3); }
-  .bias-tag { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.12em; padding:4px 9px; border-radius:2px; white-space:nowrap; }
-  .bullish { background:rgba(74,222,128,0.08); color:var(--up); border:1px solid rgba(74,222,128,0.2); }
-  .bearish { background:rgba(248,113,113,0.08); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
-  .neutral { background:rgba(251,191,36,0.08); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
-  .driver-list { list-style:none; margin-top:12px; }
-  .driver-list li { font-size:12px; color:var(--muted2); padding:6px 0; border-bottom:1px solid rgba(28,31,40,0.8); display:flex; gap:8px; line-height:1.5; }
-  .driver-list li::before { content:'→'; color:var(--accent); font-family:'Space Mono',monospace; flex-shrink:0; }
-  .pair-section-title { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.18em; color:var(--muted); text-transform:uppercase; margin:16px 0 8px; }
-  .pair-levels { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:8px; }
-  .level-box { background:var(--bg); padding:10px 12px; text-align:center; }
-  .level-label { font-family:'Space Mono',monospace; font-size:8px; color:var(--muted); letter-spacing:0.12em; margin-bottom:4px; }
-  .level-value { font-family:'Space Mono',monospace; font-size:13px; font-weight:700; }
-  .level-value.sup { color:var(--down); }
-  .level-value.res { color:var(--warn); }
-  .level-value.cur { color:var(--accent3); }
-  .sentiment-track { height:4px; background:var(--border); border-radius:2px; overflow:hidden; margin-top:6px; }
-  .sentiment-fill { height:100%; border-radius:2px; transition:width 0.6s ease; }
-  .corr-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
-  @media(max-width:700px){ .corr-grid { grid-template-columns:repeat(2,1fr); } }
-  .corr-cell { background:var(--bg); padding:14px; text-align:center; }
-  .corr-event { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px; }
-  .corr-effect { font-size:13px; font-weight:700; }
-
-  /* BANCOS */
-  .cb-row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--border); gap:12px; flex-wrap:wrap; }
-  .cb-row:last-child { border-bottom:none; }
-  .cb-info { flex:1; min-width:160px; }
-  .cb-name { font-size:14px; font-weight:700; }
-  .cb-detail { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.5; }
-  .cb-policy { font-size:11px; color:var(--muted2); margin-top:6px; line-height:1.55; }
-  .cb-rate { font-family:'Space Mono',monospace; font-size:22px; color:var(--accent3); }
-  .cb-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
-  .cb-stance { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.12em; padding:4px 8px; border-radius:2px; }
-  .hawkish { background:rgba(248,113,113,0.08); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
-  .dovish  { background:rgba(74,222,128,0.08); color:var(--up); border:1px solid rgba(74,222,128,0.2); }
-  .cb-neutral { background:rgba(251,191,36,0.08); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
-  .cb-next { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); }
-  .diff-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:1px; }
-  @media(max-width:800px){ .diff-grid { grid-template-columns:1fr; } }
-  .diff-card { background:var(--surface); padding:22px 24px; }
-  .diff-pair { font-family:'Space Mono',monospace; font-size:13px; color:var(--accent3); margin-bottom:8px; }
-  .diff-spread { font-family:'Space Mono',monospace; font-size:28px; font-weight:700; margin-bottom:6px; }
-  .diff-arrow { font-size:20px; margin-bottom:8px; }
-  .diff-analysis { font-size:12px; color:var(--muted2); line-height:1.65; }
-
-  /* CATALIZADORES */
-  .cat-section-header { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); padding:14px 16px 10px; border-bottom:1px solid var(--border); background:var(--surface); text-transform:uppercase; display:flex; justify-content:space-between; align-items:center; }
-  .cat-refresh-note { font-size:9px; color:var(--muted); font-family:'Space Mono',monospace; }
-  .cat-table { width:100%; border-collapse:collapse; background:var(--surface); }
-  .cat-table th { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.15em; color:var(--muted); text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); background:var(--surface2); }
-  .cat-table td { font-size:12px; padding:12px 14px; border-bottom:1px solid rgba(28,31,40,0.6); color:var(--muted2); vertical-align:top; line-height:1.5; }
-  .cat-table tr:last-child td { border-bottom:none; }
-  .cat-table td:first-child { font-family:'Space Mono',monospace; color:var(--text); font-size:11px; }
-  .cat-datetime { font-family:'Space Mono',monospace; font-size:10px; color:var(--accent3); white-space:nowrap; }
-  .i-high { color:var(--down); font-family:'Space Mono',monospace; font-size:10px; }
-  .i-med  { color:var(--warn); font-family:'Space Mono',monospace; font-size:10px; }
-  .prev-val { color:var(--muted2); font-family:'Space Mono',monospace; font-size:10px; }
-  .cons-val { color:var(--warn); font-family:'Space Mono',monospace; font-size:10px; }
 
   /* WELCOME / ERROR */
   #welcome-state { padding:80px 0; text-align:center; }
-  .welcome-icon { font-size:48px; margin-bottom:20px; }
+  .welcome-icon { font-size:44px; margin-bottom:20px; }
   .welcome-title { font-size:22px; font-weight:800; margin-bottom:10px; }
   .welcome-sub { font-size:13px; color:var(--muted2); max-width:420px; margin:0 auto 28px; line-height:1.7; }
   .welcome-btn { background:var(--accent); color:#080a0d; border:none; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.15em; font-weight:700; padding:14px 28px; cursor:pointer; transition:opacity 0.2s; }
   .welcome-btn:hover { opacity:0.85; }
   .error-card { background:rgba(248,113,113,0.05); border:1px solid rgba(248,113,113,0.2); padding:24px; margin-top:32px; }
   .error-card h3 { color:var(--down); font-size:14px; margin-bottom:8px; }
-  .error-card p { font-size:12px; color:var(--muted2); font-family:'Space Mono',monospace; }
+  .error-card p { font-size:12px; color:var(--muted2); font-family:'Space Mono',monospace; line-height:1.6; }
 
-  .updated-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-top:1px solid var(--border); margin-top:32px; font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); flex-wrap:wrap; gap:8px; }
-  footer { border-top:1px solid var(--border); padding:16px 28px; font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); text-align:center; }
-  .sec-header { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); padding:20px 0 12px; display:flex; align-items:center; gap:10px; text-transform:uppercase; }
+  .sec-header { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.22em; color:var(--muted); padding:28px 0 14px; display:flex; align-items:center; gap:10px; text-transform:uppercase; }
   .sec-header::after { content:''; flex:1; height:1px; background:var(--border); }
-  @media(max-width:700px){ .hero { grid-template-columns:1fr; } .hero-meta { text-align:left; } }
+
+  /* ══ BIAS DEL DÍA ══ */
+  #bias-panel { margin-top:28px; border:1px solid var(--border); background:var(--surface); animation:fadeUp 0.5s ease both; }
+  .bias-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--border); background:var(--surface2); flex-wrap:wrap; gap:10px; }
+  .bias-header-left { display:flex; align-items:center; gap:14px; }
+  .bias-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; }
+  .bias-sesion { font-family:'Space Mono',monospace; font-size:10px; color:var(--accent3); }
+  .bias-updated { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); }
+  .bias-body { display:grid; grid-template-columns:1fr 1fr 1fr 1.6fr; gap:1px; background:var(--border); }
+  @media(max-width:1050px){ .bias-body { grid-template-columns:1fr 1fr; } }
+  @media(max-width:560px){ .bias-body { grid-template-columns:1fr; } }
+
+  .bias-instrument { background:var(--surface); padding:24px 22px; position:relative; overflow:hidden; }
+  .bias-instrument::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .bias-instrument.bull::before { background:var(--up); }
+  .bias-instrument.bear::before { background:var(--down); }
+  .bias-instrument.neut::before { background:var(--warn); }
+  .bias-inst-name { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.15em; margin-bottom:10px; }
+  .bias-verdict { font-size:22px; font-weight:800; letter-spacing:-0.01em; margin-bottom:6px; }
+  .bias-verdict.bull { color:var(--up); }
+  .bias-verdict.bear { color:var(--down); }
+  .bias-verdict.neut { color:var(--warn); }
+  .bias-confianza-row { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  .bias-conf-bar { flex:1; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .bias-conf-fill { height:100%; border-radius:2px; transition:width 0.8s ease; }
+  .bias-conf-num { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); white-space:nowrap; }
+  .bias-inst-reason { font-size:12px; color:var(--muted2); line-height:1.65; margin-bottom:14px; }
+  .bias-accion { font-family:'Space Mono',monospace; font-size:9px; padding:5px 10px; border-radius:2px; display:inline-block; }
+  .bias-accion.bull { background:rgba(74,222,128,0.08); color:var(--up); border:1px solid rgba(74,222,128,0.2); }
+  .bias-accion.bear { background:rgba(248,113,113,0.08); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
+  .bias-accion.neut { background:rgba(251,191,36,0.08); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
+
+  .bias-summary { background:var(--bg); padding:24px 22px; display:flex; flex-direction:column; gap:14px; }
+  .bias-summary-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); }
+  .bias-summary-text { font-size:13px; color:var(--muted2); line-height:1.75; }
+  .bias-regla { font-family:'Space Mono',monospace; font-size:10px; color:var(--accent); padding:12px 14px; border-left:2px solid var(--accent); background:rgba(200,241,53,0.04); line-height:1.55; }
+  .bias-escenarios { display:flex; flex-direction:column; gap:8px; }
+  .bias-escenario { font-size:11px; color:var(--muted2); padding:9px 12px; border-left:2px solid var(--border); line-height:1.55; }
+  .bias-escenario strong { display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.08em; color:var(--text); margin-bottom:3px; }
+
+  /* ══ NOTICIAS ══ */
+  #noticias-panel { margin-top:16px; border:1px solid var(--border); background:var(--surface); animation:fadeUp 0.5s ease 0.08s both; }
+  .noticias-header { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-bottom:1px solid var(--border); background:var(--surface2); }
+  .noticias-title { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.2em; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .noticias-title::before { content:'●'; color:var(--accent); font-size:7px; animation:pulse 2s infinite; }
+  .noticias-ts { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); }
+  .noticias-list { list-style:none; }
+  .noticia-item { display:grid; grid-template-columns:64px 1fr 100px; gap:16px; align-items:start; padding:15px 20px; border-bottom:1px solid rgba(28,31,40,0.6); transition:background 0.15s; }
+  .noticia-item:last-child { border-bottom:none; }
+  .noticia-item:hover { background:rgba(255,255,255,0.015); }
+  .noticia-impacto { font-family:'Space Mono',monospace; font-size:9px; padding:4px 5px; border-radius:2px; text-align:center; margin-top:1px; line-height:1.5; }
+  .ni-alto { background:rgba(248,113,113,0.1); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
+  .ni-medio { background:rgba(251,191,36,0.1); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
+  .noticia-titular { font-size:13px; font-weight:600; color:var(--text); margin-bottom:5px; line-height:1.4; }
+  .noticia-detalle { font-size:11px; color:var(--muted2); line-height:1.65; }
+  .noticia-par { font-family:'Space Mono',monospace; font-size:8px; color:var(--muted); margin-top:5px; letter-spacing:0.1em; }
+  .noticia-efecto-col { display:flex; flex-direction:column; gap:6px; align-items:flex-end; padding-top:2px; }
+  .noticia-efecto { font-family:'Space Mono',monospace; font-size:10px; padding:4px 8px; border-radius:2px; text-align:center; white-space:nowrap; }
+  .efecto-up   { color:var(--up);   background:rgba(74,222,128,0.07);  border:1px solid rgba(74,222,128,0.18); }
+  .efecto-down { color:var(--down); background:rgba(248,113,113,0.07); border:1px solid rgba(248,113,113,0.18); }
+  .efecto-warn { color:var(--warn); background:rgba(251,191,36,0.07);  border:1px solid rgba(251,191,36,0.18); }
+  @media(max-width:700px){ .noticia-item { grid-template-columns:48px 1fr; } .noticia-efecto-col { display:none; } }
+
+  /* ══ DXY / EUR / GBP ══ */
+  #dxy-section { animation:fadeUp 0.5s ease 0.15s both; }
+  .inst-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  @media(max-width:900px){ .inst-cards { grid-template-columns:1fr; } }
+  .inst-card { background:var(--surface); padding:26px 24px; position:relative; overflow:hidden; }
+  .inst-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .inst-card.bull::before { background:var(--up); }
+  .inst-card.bear::before { background:var(--down); }
+  .inst-card.neut::before { background:var(--warn); }
+  .inst-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:18px; }
+  .inst-name { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.15em; margin-bottom:6px; }
+  .inst-precio { font-family:'Space Mono',monospace; font-size:34px; font-weight:700; color:var(--accent3); letter-spacing:-0.02em; line-height:1; }
+  .inst-badge { font-family:'Space Mono',monospace; font-size:9px; padding:3px 9px; border-radius:2px; white-space:nowrap; margin-top:4px; }
+  .inst-badge.bull { background:rgba(74,222,128,0.08); color:var(--up); border:1px solid rgba(74,222,128,0.2); }
+  .inst-badge.bear { background:rgba(248,113,113,0.08); color:var(--down); border:1px solid rgba(248,113,113,0.2); }
+  .inst-badge.neut { background:rgba(251,191,36,0.08); color:var(--warn); border:1px solid rgba(251,191,36,0.2); }
+  .inst-niveles { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); margin:16px 0; }
+  .inst-nivel { background:var(--bg); padding:9px 11px; }
+  .inst-nivel-lbl { font-family:'Space Mono',monospace; font-size:8px; color:var(--muted); letter-spacing:0.1em; margin-bottom:3px; }
+  .inst-nivel-val { font-family:'Space Mono',monospace; font-size:13px; font-weight:700; }
+  .inst-nivel-val.s { color:var(--down); }
+  .inst-nivel-val.r { color:var(--warn); }
+  .inst-analisis { font-size:12px; color:var(--muted2); line-height:1.7; }
+
+  .dxy-context { margin-top:1px; display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); border-top:none; }
+  @media(max-width:750px){ .dxy-context { grid-template-columns:1fr; } }
+  .dxy-ctx-card { background:var(--surface); padding:24px; }
+  .dxy-ctx-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.18em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .dxy-ctx-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .dxy-ctx-title { font-size:15px; font-weight:700; margin-bottom:10px; line-height:1.3; }
+  .dxy-ctx-body { font-size:13px; color:var(--muted2); line-height:1.75; }
+  .dxy-ctx-conclusion { margin-top:12px; font-family:'Space Mono',monospace; font-size:10px; color:var(--accent); padding:10px 13px; border-left:2px solid var(--accent); background:rgba(200,241,53,0.04); line-height:1.55; }
+
+  .updated-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-top:40px; font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); flex-wrap:wrap; gap:8px; }
+  footer { border-top:1px solid var(--border); padding:14px 28px; font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); text-align:center; }
 </style>
 </head>
 <body>
@@ -280,20 +207,20 @@
     <div class="gate-logo">MACRO/DESK · FOREX INTELLIGENCE</div>
     <div class="gate-title">Tu asesor<br><em>macro 24/7</em></div>
     <p class="gate-desc">
-      BIAS del día · Noticias en tiempo real · DXY · EUR/USD · GBP/USD<br><br>
+      BIAS del día · Noticias de alto impacto · DXY · EUR/USD · GBP/USD<br><br>
       Necesitas una API Key de <strong>OpenRouter</strong> con acceso a Claude. Obtén la tuya en <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
     </p>
     <input type="password" class="gate-input" id="api-key-input" placeholder="sk-or-v1-..." autocomplete="off" />
     <div class="gate-error" id="gate-error">API Key inválida. Debe empezar con sk-or- o sk-</div>
     <button class="gate-btn" onclick="saveKey()">ENTRAR AL DASHBOARD →</button>
-    <div class="gate-note">🔒 Tu API Key se guarda solo en este navegador. Coste estimado: ~$0.005 por análisis completo.</div>
+    <div class="gate-note">🔒 Tu API Key se guarda solo en este navegador. Coste estimado: ~$0.003 por análisis completo.</div>
   </div>
 </div>
 
 <header>
   <div class="logo">MACRO<span>/</span>DESK <span>· FOREX</span></div>
   <div class="header-right">
-    <div class="live-badge"><div class="dot active" id="status-dot"></div><span id="status-text">LISTO</span></div>
+    <div class="live-badge"><div class="dot" id="status-dot"></div><span id="status-text">LISTO</span></div>
     <button class="refresh-btn" id="refresh-btn" onclick="generateAnalysis()">⟳ ACTUALIZAR</button>
     <button class="logout-btn" onclick="logout()">SALIR</button>
   </div>
@@ -303,25 +230,23 @@
   <div class="hero">
     <div>
       <div class="hero-eyebrow">// BIAS · NOTICIAS · DXY · EUR/USD · GBP/USD</div>
-      <h1>ANÁLISIS<br><em>MACRO & GEO</em><br>EN TIEMPO REAL</h1>
+      <h1>ANÁLISIS<br><em>MACRO</em><br>EN TIEMPO REAL</h1>
     </div>
     <div class="hero-meta">
       <div class="hero-date" id="hero-date">—</div>
-      <div class="risk-pill risk-high" id="risk-pill">⚠ CARGANDO</div>
+      <div class="risk-pill risk-med" id="risk-pill">◆ CARGANDO</div>
     </div>
   </div>
 
   <!-- LOADING -->
   <div id="loading-state">
     <div class="loader-ring"></div>
-    <div class="loader-text" id="loader-main-text">GENERANDO ANÁLISIS</div>
-    <div class="loader-sub">Claude está buscando noticias y construyendo el análisis...</div>
+    <div class="loader-text">GENERANDO ANÁLISIS</div>
+    <div class="loader-sub">Claude está analizando el mercado en tiempo real...</div>
     <div class="loader-steps">
-      <div class="loader-step" id="step1">○ Noticias del día vía web search</div>
-      <div class="loader-step" id="step2">○ BIAS del día — DXY, EUR/USD, GBP/USD</div>
-      <div class="loader-step" id="step3">○ Análisis macro global y países</div>
-      <div class="loader-step" id="step4">○ DXY + Pares detallados</div>
-      <div class="loader-step" id="step5">○ Bancos centrales y catalizadores</div>
+      <div class="loader-step" id="step1">○ Noticias de alto impacto — web search</div>
+      <div class="loader-step" id="step2">○ BIAS operativo — DXY · EUR/USD · GBP/USD</div>
+      <div class="loader-step" id="step3">○ Niveles técnicos y contexto macro</div>
     </div>
   </div>
 
@@ -329,14 +254,14 @@
   <div id="welcome-state">
     <div class="welcome-icon">📡</div>
     <div class="welcome-title">Dashboard listo</div>
-    <div class="welcome-sub">NUEVO: BIAS del día con veredicto claro, noticias en tiempo real con web search, y análisis del DXY. Coste: ~$0.005 por análisis.</div>
+    <div class="welcome-sub">BIAS del día con veredicto claro · Noticias de alto impacto · Análisis técnico con niveles clave de DXY, EUR/USD y GBP/USD.</div>
     <button class="welcome-btn" onclick="generateAnalysis()">GENERAR ANÁLISIS AHORA →</button>
   </div>
 
   <!-- DASHBOARD -->
   <div id="dashboard-content">
 
-    <!-- ══ 1. BIAS DEL DÍA ══ -->
+    <!-- 1. BIAS -->
     <div id="bias-panel">
       <div class="bias-header">
         <div class="bias-header-left">
@@ -348,7 +273,7 @@
       <div class="bias-body" id="bias-body"></div>
     </div>
 
-    <!-- ══ 2. NOTICIAS DEL DÍA ══ -->
+    <!-- 2. NOTICIAS -->
     <div id="noticias-panel">
       <div class="noticias-header">
         <div class="noticias-title">NOTICIAS DE ALTO IMPACTO — HOY</div>
@@ -357,72 +282,23 @@
       <ul class="noticias-list" id="noticias-list"></ul>
     </div>
 
-    <!-- TABS -->
-    <div class="tabs-wrap">
-      <button class="tab active" onclick="showTab('macro',this)">Macro Global</button>
-      <button class="tab" onclick="showTab('dxy',this)">DXY & Gráficos</button>
-      <button class="tab" onclick="showTab('pares',this)">Pares</button>
-      <button class="tab" onclick="showTab('bancos',this)">Bancos Centrales</button>
-      <button class="tab" onclick="showTab('catalysts',this)">Catalizadores</button>
-    </div>
-
-    <!-- TAB MACRO -->
-    <div id="tab-macro" class="tab-content active">
-      <div class="sec-header">Situación por País / Región</div>
-      <div class="country-grid" id="country-cards"></div>
-      <div class="sec-header" style="margin-top:24px;">Narrativa de Mercado</div>
-      <div class="grid g2" id="macro-narratives"></div>
-      <div class="sec-header" style="margin-top:24px;">Temas Macro Clave</div>
-      <div class="grid g4" id="macro-cards"></div>
-    </div>
-
-    <!-- TAB DXY -->
-    <div id="tab-dxy" class="tab-content">
-      <div class="sec-header">Análisis DXY — EUR/USD — GBP/USD</div>
-      <div class="dxy-grid" id="dxy-grid"></div>
-      <div class="sec-header" style="margin-top:24px;">Interpretación Macro-Gráfica</div>
-      <div class="grid g2" id="dxy-interpretacion"></div>
-    </div>
-
-    <!-- TAB PARES -->
-    <div id="tab-pares" class="tab-content">
-      <div class="grid g2" id="pares-cards"></div>
-      <div class="sec-header" style="margin-top:24px;">Correlaciones Macro Clave</div>
-      <div class="corr-grid" id="correlaciones"></div>
-    </div>
-
-    <!-- TAB BANCOS -->
-    <div id="tab-bancos" class="tab-content">
-      <div class="sec-header">Política Monetaria Actual</div>
-      <div style="background:var(--surface); padding:0 24px;" id="bancos-tabla"></div>
-      <div class="sec-header" style="margin-top:24px;">Divergencia de Tasas</div>
-      <div class="diff-grid" id="bancos-divergencia"></div>
-      <div class="sec-header" style="margin-top:24px;">Perspectivas</div>
-      <div class="grid g2" id="bancos-perspectivas"></div>
-    </div>
-
-    <!-- TAB CATALIZADORES -->
-    <div id="tab-catalysts" class="tab-content">
-      <div class="cat-section-header">
-        <span>EVENTOS DE ALTO IMPACTO — PRÓXIMAS SEMANAS</span>
-        <span class="cat-refresh-note" id="cat-updated">—</span>
-      </div>
-      <table class="cat-table">
-        <thead><tr><th>EVENTO</th><th>FECHA / HORA</th><th>IMPACTO</th><th>PAR</th><th>PREVIO / CONSENSO</th><th>QUÉ VIGILAR</th></tr></thead>
-        <tbody id="catalysts-content"></tbody>
-      </table>
+    <!-- 3. DXY / EUR / GBP -->
+    <div id="dxy-section">
+      <div class="sec-header">Análisis Técnico — DXY · EUR/USD · GBP/USD</div>
+      <div class="inst-cards" id="inst-cards"></div>
+      <div class="dxy-context" id="dxy-context"></div>
     </div>
 
     <div class="updated-bar">
       <span id="last-updated">Última actualización: —</span>
-      <span style="color:var(--muted);">Powered by Claude · No es asesoramiento financiero</span>
+      <span>Powered by Claude · No es asesoramiento financiero</span>
     </div>
   </div>
 
   <div id="error-state" style="display:none;">
     <div class="error-card">
-      <h3>Error al generar análisis</h3>
-      <p id="error-msg">Verifica tu API Key e intenta de nuevo.</p>
+      <h3>⚠ Error al generar análisis</h3>
+      <p id="error-msg">Verifica tu API Key e intenta de nuevo. Abre la consola (F12) para más detalles.</p>
     </div>
   </div>
 </main>
@@ -432,65 +308,85 @@
 <script>
 let apiKey = '';
 const STORAGE_KEY = 'macrodesk_apikey';
-const CACHE_KEY   = 'macrodesk_v5';
+const CACHE_KEY   = 'macrodesk_v6';
 const CACHE_TTL   = 4 * 60 * 60 * 1000;
 
 window.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) { apiKey = saved; document.getElementById('api-gate').style.display = 'none'; updateDate(); loadFromCache(); }
+  if (saved) {
+    apiKey = saved;
+    document.getElementById('api-gate').style.display = 'none';
+    updateDate();
+    loadFromCache();
+  }
 });
+
 function saveKey() {
   const val = document.getElementById('api-key-input').value.trim();
   const err = document.getElementById('gate-error');
   if (!val.startsWith('sk-or-') && !val.startsWith('sk-')) { err.style.display='block'; return; }
-  err.style.display='none'; apiKey=val; localStorage.setItem(STORAGE_KEY,val);
-  document.getElementById('api-gate').style.display='none'; updateDate(); loadFromCache();
-}
-function logout() { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(CACHE_KEY); location.reload(); }
-function updateDate() {
-  document.getElementById('hero-date').textContent = new Date().toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
-}
-function loadFromCache() {
-  try { const raw=localStorage.getItem(CACHE_KEY); if(!raw)return; const{data,ts}=JSON.parse(raw); if(Date.now()-ts<CACHE_TTL) renderDashboard(data); } catch(e){}
-}
-function showTab(id, el) {
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  if(el) el.classList.add('active');
-}
-function setStep(n, state) {
-  const el = document.getElementById('step'+n);
-  if (!el) return;
-  const text = el.textContent.replace(/^[○✓▶] /,'');
-  el.className = 'loader-step' + (state==='done'?' done':state==='run'?' running':'');
-  el.textContent = (state==='done'?'✓ ':state==='run'?'▶ ':'○ ') + text;
+  err.style.display = 'none';
+  apiKey = val;
+  localStorage.setItem(STORAGE_KEY, val);
+  document.getElementById('api-gate').style.display = 'none';
+  updateDate();
+  loadFromCache();
 }
 
-// ── PRECIOS REALES via Frankfurter API (sin CORS) ──
+function logout() {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(CACHE_KEY);
+  location.reload();
+}
+
+function updateDate() {
+  document.getElementById('hero-date').textContent = new Date()
+    .toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+}
+
+function loadFromCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts < CACHE_TTL) renderDashboard(data);
+  } catch(e) {}
+}
+
+function setStep(n, state) {
+  const el = document.getElementById('step' + n);
+  if (!el) return;
+  const text = el.textContent.replace(/^[○✓▶] /, '');
+  el.className = 'loader-step' + (state==='done' ? ' done' : state==='run' ? ' running' : '');
+  el.textContent = (state==='done' ? '✓ ' : state==='run' ? '▶ ' : '○ ') + text;
+}
+
+// ── Precios reales via Frankfurter ──
 async function fetchPrecios() {
   const result = {};
   try {
-    // EUR/USD y GBP/USD via Frankfurter (gratuito, sin CORS)
     const r = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP');
     const d = await r.json();
     if (d.rates) {
-      const eurusd = (1 / d.rates.EUR).toFixed(4);
-      const gbpusd = (1 / d.rates.GBP).toFixed(4);
-      result['EUR/USD'] = eurusd;
-      result['GBP/USD'] = gbpusd;
+      result['EUR/USD'] = (1 / d.rates.EUR).toFixed(4);
+      result['GBP/USD'] = (1 / d.rates.GBP).toFixed(4);
     }
   } catch(e) {
-    console.warn('No se pudieron obtener precios Frankfurter');
+    console.warn('Frankfurter no disponible');
   }
   return result;
 }
 
 // ── API CALL ──
-async function callAI(prompt, maxTokens=1200) {
+async function callAI(prompt, maxTokens = 1200) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}`, 'HTTP-Referer':location.href, 'X-Title':'MacroDesk' },
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+      'HTTP-Referer': location.href,
+      'X-Title': 'MacroDesk'
+    },
     body: JSON.stringify({
       model: 'anthropic/claude-3.5-haiku',
       max_tokens: maxTokens,
@@ -500,64 +396,54 @@ async function callAI(prompt, maxTokens=1200) {
           role: 'system',
           content: 'You are a JSON API. You MUST respond with ONLY a valid JSON object. No markdown, no backticks, no explanation, no preamble, no text before or after the JSON. Start your response with { and end with }. All strings must use straight double quotes. No trailing commas.'
         },
-        { role:'user', content: prompt }
+        { role: 'user', content: prompt }
       ]
     })
   });
+
   if (!r.ok) {
-    const e = await r.json().catch(()=>({}));
-    const msg = e.error?.message || `HTTP ${r.status}`;
-    throw new Error(`Error de API: ${msg}`);
+    const e = await r.json().catch(() => ({}));
+    throw new Error(`Error de API: ${e.error?.message || 'HTTP ' + r.status}`);
   }
+
   const d = await r.json();
   let txt = '';
   try {
     const msg = d.choices[0].message;
-    if (Array.isArray(msg.content)) {
-      txt = msg.content.filter(b=>b&&b.type==='text').map(b=>b.text).join('');
-    } else {
-      txt = String(msg.content || '');
-    }
+    txt = Array.isArray(msg.content)
+      ? msg.content.filter(b => b?.type === 'text').map(b => b.text).join('')
+      : String(msg.content || '');
   } catch(pe) {
-    throw new Error('Respuesta inesperada de la API: ' + JSON.stringify(d).slice(0,300));
+    throw new Error('Respuesta inesperada: ' + JSON.stringify(d).slice(0, 200));
   }
+
   if (!txt.trim()) throw new Error('La IA devolvió una respuesta vacía');
 
-  // Clean and extract JSON
-  txt = txt.trim();
+  txt = txt.trim()
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```\s*$/, '')
+    .trim();
 
-  // Remove markdown code fences if present
-  txt = txt.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/,'');
-  txt = txt.trim();
-
-  // Find first { and last }
-  const a = txt.indexOf('{');
-  const b = txt.lastIndexOf('}');
-
+  const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
   if (a === -1 || b === -1 || b < a) {
-    console.error('Respuesta sin JSON:', txt.slice(0, 400));
-    throw new Error(`La IA no devolvió JSON. Respuesta: "${txt.slice(0,120)}..."`);
+    throw new Error(`La IA no devolvió JSON. Respuesta: "${txt.slice(0, 120)}..."`);
   }
 
-  txt = txt.slice(a, b + 1);
-
-  // Normalize characters
-  txt = txt
+  txt = txt.slice(a, b + 1)
     .replace(/[\u2018\u2019]/g, "'")
     .replace(/[\u201C\u201D]/g, '"')
-    .replace(/,(\s*[}\]])/g, '$1')         // trailing commas
-    .replace(/[\x00-\x09\x0b\x0c\x0e-\x1f]/g, ' ');  // control chars
+    .replace(/,(\s*[}\]])/g, '$1')
+    .replace(/[\x00-\x09\x0b\x0c\x0e-\x1f]/g, ' ');
 
   try {
     return JSON.parse(txt);
   } catch(je) {
-    console.error('JSON parse error:', je.message, '\nTexto:', txt.slice(0,500));
-    throw new Error(`JSON inválido: ${je.message}. Fragmento: "${txt.slice(0,80)}..."`);
+    throw new Error(`JSON inválido: ${je.message}. Fragmento: "${txt.slice(0, 100)}..."`);
   }
 }
 
+// ── GENERAR ANÁLISIS ──
 async function generateAnalysis() {
-  // Always clear cache so every click generates fresh analysis
   localStorage.removeItem(CACHE_KEY);
   const btn = document.getElementById('refresh-btn');
   btn.disabled = true;
@@ -565,259 +451,193 @@ async function generateAnalysis() {
   document.getElementById('welcome-state').style.display = 'none';
   document.getElementById('dashboard-content').style.display = 'none';
   document.getElementById('error-state').style.display = 'none';
-  for(let i=1;i<=5;i++) setStep(i,'');
+  for (let i = 1; i <= 3; i++) setStep(i, '');
   setStatus('ANALIZANDO...', false);
-  // Always clear cache so every click generates fresh analysis
-  localStorage.removeItem(CACHE_KEY);
 
-  const today = new Date().toLocaleDateString('es-ES',{year:'numeric',month:'long',day:'numeric'});
+  const today = new Date().toLocaleDateString('es-ES', {year:'numeric', month:'long', day:'numeric'});
 
-  // Fetch real prices first
   let precios = {};
-  try {
-    precios = await fetchPrecios();
-    console.log('Precios reales:', precios);
-  } catch(e) {
-    console.warn('No se pudieron obtener precios reales');
-  }
+  try { precios = await fetchPrecios(); } catch(e) {}
 
   const preciosTexto = Object.keys(precios).length > 0
-    ? `Precios reales AHORA MISMO: DXY=${precios['DXY']||'N/A'}, EUR/USD=${precios['EUR/USD']||'N/A'}, GBP/USD=${precios['GBP/USD']||'N/A'}. USA ESTOS PRECIOS EXACTOS en tu analisis, no inventes otros.`
+    ? `Precios reales ahora mismo (usa estos exactos): EUR/USD=${precios['EUR/USD']}, GBP/USD=${precios['GBP/USD']}.`
     : '';
 
-  const BASE = `Hoy es ${today}. ${preciosTexto} Devuelve SOLO JSON valido puro. Sin backticks. Sin texto adicional. Comillas dobles rectas. Sin comas finales. Strings cortos, max 15 palabras.`;
+  const BASE = `Hoy es ${today}. ${preciosTexto} Devuelve SOLO JSON valido puro. Sin backticks ni texto extra. Comillas dobles rectas. Sin comas finales.`;
 
   try {
-    // ── P1: Noticias con web search ──
-    setStep(1,'run');
-    const p1 = callAI(`${BASE}
-Busca en internet noticias macro y geopoliticas de HOY que afecten EUR/USD, GBP/USD y DXY. Aranceles, Fed, BCE, BoE, geopolitica, datos economicos, China, petroleo, guerra comercial.
-Devuelve SOLO:
-{"riesgo":"ALTO","noticias_hoy":[{"titular":"titular real noticia hoy","impacto":"ALTO","par_afectado":"EUR/USD","efecto_divisa":"USD_SUBE","detalle":"efecto concreto en mercado"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_BAJA","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"TODOS","efecto_divisa":"VOLATILIDAD","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"MEDIO","par_afectado":"EUR/USD","efecto_divisa":"EUR_SUBE","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"MEDIO","par_afectado":"DXY","efecto_divisa":"USD_BAJA","detalle":"efecto concreto"},{"titular":"titular real hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_SUBE","detalle":"efecto concreto"}]}`, 1200);
+    // P1 y P2 en paralelo
+    setStep(1, 'run');
+    setStep(2, 'run');
 
-    // ── P2: BIAS ──
-    setStep(2,'run');
+    const p1 = callAI(`${BASE}
+Busca noticias macro y geopoliticas reales de HOY que muevan EUR/USD, GBP/USD y DXY. Cubre: aranceles, Fed, BCE, BoE, datos economicos publicados hoy, geopolitica, petroleo.
+{"riesgo":"ALTO","noticias_hoy":[
+{"titular":"titular real y concreto de la noticia de hoy","impacto":"ALTO","par_afectado":"EUR/USD","efecto_divisa":"USD_SUBE","detalle":"explicacion clara del efecto en el precio del par"},
+{"titular":"titular real de hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_BAJA","detalle":"efecto concreto en mercado"},
+{"titular":"titular real de hoy","impacto":"ALTO","par_afectado":"TODOS","efecto_divisa":"VOLATILIDAD","detalle":"por que genera volatilidad"},
+{"titular":"titular real de hoy","impacto":"MEDIO","par_afectado":"EUR/USD","efecto_divisa":"EUR_SUBE","detalle":"efecto concreto"},
+{"titular":"titular real de hoy","impacto":"MEDIO","par_afectado":"DXY","efecto_divisa":"USD_BAJA","detalle":"efecto concreto"},
+{"titular":"titular real de hoy","impacto":"ALTO","par_afectado":"GBP/USD","efecto_divisa":"GBP_SUBE","detalle":"efecto concreto"}
+]}`, 1200);
+
     const p2 = callAI(`${BASE}
-Analiza el BIAS operativo real de hoy ${today} para forex. Basa el analisis en el contexto macro actual real.
-Devuelve SOLO:
-{"bias_sesion":"LONDON-NY","bias_dxy":{"instrumento":"DXY","direccion":"BAJISTA","clase":"bear","confianza":72,"razon":"razon macro real breve hoy","accion":"VENDER REBOTES"},"bias_eurusd":{"instrumento":"EUR/USD","direccion":"ALCISTA","clase":"bull","confianza":65,"razon":"razon macro real breve","accion":"BUSCAR LARGOS EN SOPORTE"},"bias_gbpusd":{"instrumento":"GBP/USD","direccion":"NEUTRAL","clase":"neut","confianza":50,"razon":"razon macro real breve","accion":"ESPERAR CONFIRMACION"},"resumen_bias":"resumen ejecutivo 2 frases del contexto macro hoy y que hacer","regla_dia":"regla operativa concreta para hoy basada en contexto real"}`, 800);
+Analiza el BIAS operativo real de hoy para forex, basado en el contexto macro actual real.
+{"bias_sesion":"LONDON-NY","bias_dxy":{"instrumento":"DXY","direccion":"BAJISTA","clase":"bear","confianza":72,"razon":"razon macro real de hoy max 18 palabras","accion":"accion operativa concreta"},"bias_eurusd":{"instrumento":"EUR/USD","direccion":"ALCISTA","clase":"bull","confianza":65,"razon":"razon macro real max 18 palabras","accion":"accion operativa concreta"},"bias_gbpusd":{"instrumento":"GBP/USD","direccion":"NEUTRAL","clase":"neut","confianza":50,"razon":"razon macro real max 18 palabras","accion":"accion operativa concreta"},"resumen_bias":"2 frases sobre el contexto macro de hoy y que hay que hacer","regla_dia":"regla operativa concreta y accionable para hoy","escenario_alcista":"que tiene que ocurrir para que USD baje y EUR/GBP suban","escenario_bajista":"que tiene que ocurrir para que USD suba y EUR/GBP bajen"}`, 900);
 
     const [r1, r2] = await Promise.all([p1, p2]);
-    setStep(1,'done'); setStep(2,'done');
+    setStep(1, 'done');
+    setStep(2, 'done');
 
-    // ── P3: Macro global ──
-    setStep(3,'run');
-    const p3 = callAI(`${BASE}
-Datos macro reales hoy:
-{"temas_macro":[{"titulo":"titulo real","emoji":"🔥","color":"warn","descripcion":"desc real breve"},{"titulo":"titulo real","emoji":"📉","color":"down","descripcion":"desc real"},{"titulo":"titulo real","emoji":"📈","color":"up","descripcion":"desc real"},{"titulo":"titulo real","emoji":"🏦","color":"blue","descripcion":"desc real"}],"narrativa_usd":{"titulo":"titulo","cuerpo":"situacion USD real hoy","conclusion":"accion operativa"},"narrativa_eur":{"titulo":"titulo","cuerpo":"situacion EUR real hoy","conclusion":"accion operativa"},"paises":[{"pais":"EEUU","bandera":"🇺🇸","estado":"estado economico real","detalle":"detalle real breve","badge_texto":"CRECIENDO","badge_tipo":"up"},{"pais":"EUROZONA","bandera":"🇪🇺","estado":"estado real","detalle":"detalle real","badge_texto":"NEUTRO","badge_tipo":"warn"},{"pais":"REINO UNIDO","bandera":"🇬🇧","estado":"estado real","detalle":"detalle real","badge_texto":"DEBIL","badge_tipo":"down"},{"pais":"CHINA","bandera":"🇨🇳","estado":"estado real","detalle":"detalle real","badge_texto":"ESTIMULO","badge_tipo":"blue"},{"pais":"JAPON","bandera":"🇯🇵","estado":"estado real","detalle":"detalle real","badge_texto":"HAWKISH","badge_tipo":"down"},{"pais":"SUIZA","bandera":"🇨🇭","estado":"estado real","detalle":"detalle real","badge_texto":"NEUTRO","badge_tipo":"warn"}]}`, 1000);
+    // P3
+    setStep(3, 'run');
+    const r3 = await callAI(`${BASE}
+Analisis tecnico real de hoy con niveles clave actuales de mercado:
+{"instrumentos":[{"nombre":"DXY","precio_ref":"104.20","tendencia":"BAJISTA","clase":"bear","soporte1":"103.50","soporte2":"102.80","resistencia1":"105.00","resistencia2":"105.80","analisis":"analisis tecnico macro real del DXY hoy en 2-3 frases con contexto de por que"},{"nombre":"EUR/USD","precio_ref":"1.0850","tendencia":"ALCISTA","clase":"bull","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","analisis":"analisis tecnico macro real EURUSD hoy en 2-3 frases"},{"nombre":"GBP/USD","precio_ref":"1.2650","tendencia":"NEUTRAL","clase":"neut","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","analisis":"analisis tecnico macro real GBPUSD hoy en 2-3 frases"}],"contexto_dxy":{"titulo":"DXY — Contexto macro actual","cuerpo":"analisis profundo del dolar hoy: que lo mueve, correlacion con commodities y risk sentiment, posicion frente a las principales divisas, narrativa Fed","conclusion":"implicacion operativa clara para los traders de EUR y GBP"},"contexto_eurusd":{"titulo":"EUR/USD — Narrativa fundamental de hoy","cuerpo":"situacion real del euro hoy: datos economicos recientes, postura BCE, diferencial de tasas con Fed, flujos institucionales","conclusion":"accion operativa concreta: donde comprar, donde vender, que esperar"}}`, 1600);
+    setStep(3, 'done');
 
-    // ── P4: DXY + Pares ──
-    setStep(4,'run');
-    const p4 = callAI(`${BASE}
-Analisis tecnico-macro real DXY y pares hoy + datos pares detallados:
-{"dxy_analisis":[{"nombre":"DXY","precio_ref":"104.20","tendencia":"BAJISTA","clase":"bear","soporte1":"103.50","soporte2":"102.80","resistencia1":"105.00","resistencia2":"105.80","analisis":"analisis real DXY hoy macro tecnico 2 frases"},{"nombre":"EUR/USD","precio_ref":"1.0850","tendencia":"ALCISTA","clase":"bull","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","analisis":"analisis real EURUSD hoy"},{"nombre":"GBP/USD","precio_ref":"1.2650","tendencia":"NEUTRAL","clase":"neut","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","analisis":"analisis real GBPUSD hoy"}],"dxy_interpretacion":[{"titulo":"DXY vs EUR/USD — Correlacion inversa","analisis":"como afecta DXY a EURUSD ahora real"},{"titulo":"DXY vs GBP/USD — Contexto actual","analisis":"como afecta DXY a GBPUSD ahora real"}],"pares":[{"nombre":"EUR/USD","sesgo":"ALCISTA","sesgo_tipo":"bullish","resumen":"resumen real hoy","precio_ref":"1.0850","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","sentimiento_bulls":55,"drivers":["driver real 1","driver real 2","driver real 3","driver real 4","driver real 5"],"riesgo_principal":"riesgo real","oportunidad":"oportunidad real hoy"},{"nombre":"GBP/USD","sesgo":"NEUTRAL","sesgo_tipo":"neutral","resumen":"resumen real hoy","precio_ref":"1.2650","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","sentimiento_bulls":48,"drivers":["driver real 1","driver real 2","driver real 3","driver real 4","driver real 5"],"riesgo_principal":"riesgo real","oportunidad":"oportunidad real"}],"correlaciones":[{"evento":"PETROLEO UP","efecto":"USD sube"},{"evento":"RIESGO ON","efecto":"USD baja"},{"evento":"FED DOVISH","efecto":"USD baja"},{"evento":"ARANCELES USA","efecto":"Volatil"},{"evento":"GEOPOLITICA","efecto":"USD sube"},{"evento":"FISCAL EU","efecto":"EUR sube"},{"evento":"DATOS UK DEBILES","efecto":"GBP baja"},{"evento":"BOE DOVISH","efecto":"GBP baja"},{"evento":"RISK OFF","efecto":"CHF/JPY suben"}]}`, 2000);
-
-    const [r3, r4] = await Promise.all([p3, p4]);
-    setStep(3,'done'); setStep(4,'done');
-
-    // ── P5: Bancos + catalizadores ──
-    setStep(5,'run');
-    const r5 = await callAI(`${BASE}
-Bancos centrales reales y proximos catalizadores con fechas:
-{"bancos_centrales":[{"nombre":"Fed EEUU","tasa":"4.50%","stance":"DOVISH","stance_tipo":"dovish","detalle":"detalle real breve","politica":"politica monetaria real actual","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"BCE Eurozona","tasa":"2.50%","stance":"NEUTRAL","stance_tipo":"cb-neutral","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"BoE UK","tasa":"4.50%","stance":"DOVISH","stance_tipo":"dovish","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"SNB Suiza","tasa":"0.25%","stance":"NEUTRAL","stance_tipo":"cb-neutral","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"}],"divergencias":[{"par":"Fed vs BCE","spread":"2.00%","flecha":"↑","analisis":"efecto real EUR/USD"},{"par":"Fed vs BoE","spread":"0.00%","flecha":"→","analisis":"efecto real GBP/USD"},{"par":"BCE vs SNB","spread":"2.25%","flecha":"↑","analisis":"efecto real CHF"}],"perspectivas":[{"banco":"Fed","titulo":"perspectiva Fed real","analisis":"analisis detallado perspectiva Fed proximos meses"},{"banco":"BCE","titulo":"perspectiva BCE real","analisis":"analisis detallado perspectiva BCE proximos meses"}],"catalizadores":[{"evento":"NFP USA","fecha":"03 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"151K","consenso":"160K","vigilar":"detalle real"},{"evento":"CPI USA","fecha":"10 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.8%","consenso":"2.7%","vigilar":"detalle real"},{"evento":"BCE Reunion","fecha":"17 Abr 2026","hora":"12:15 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.50%","consenso":"2.25%","vigilar":"detalle real"},{"evento":"PCE Core","fecha":"30 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.6%","consenso":"2.5%","vigilar":"detalle real"},{"evento":"FOMC Decision","fecha":"07 May 2026","hora":"19:00 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"4.50%","consenso":"4.50%","vigilar":"detalle real"},{"evento":"BoE Reunion","fecha":"08 May 2026","hora":"12:00 UTC","impacto":"ALTO","pares":"GBP/USD","previo":"4.50%","consenso":"4.25%","vigilar":"detalle real"},{"evento":"IPC Eurozona","fecha":"30 Abr 2026","hora":"10:00 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.3%","consenso":"2.2%","vigilar":"detalle real"},{"evento":"GDP UK Q1","fecha":"15 May 2026","hora":"07:00 UTC","impacto":"MEDIO","pares":"GBP/USD","previo":"-0.1%","consenso":"0.2%","vigilar":"detalle real"}]}`, 2000);
-    setStep(5,'done');
-
-    const parsed = { ...r1, ...r2, ...r3, ...r4, ...r5 };
-    localStorage.setItem(CACHE_KEY, JSON.stringify({data:parsed, ts:Date.now()}));
+    const parsed = { ...r1, ...r2, ...r3 };
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ data: parsed, ts: Date.now() }));
     renderDashboard(parsed);
     setStatus('ACTUALIZADO');
 
   } catch(e) {
     console.error('Error en análisis:', e);
-    document.getElementById('loading-state').style.display='none';
-    document.getElementById('error-state').style.display='block';
-    document.getElementById('error-msg').textContent = e.message || 'Error desconocido. Abre la consola del navegador (F12) para más detalles.';
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('error-state').style.display = 'block';
+    document.getElementById('error-msg').textContent = e.message || 'Error desconocido.';
     setStatus('ERROR', false);
   } finally {
     btn.disabled = false;
   }
 }
 
-function setStatus(t, active) {
+function setStatus(t, active = true) {
   document.getElementById('status-text').textContent = t;
   document.getElementById('status-dot').classList.toggle('active', active);
 }
 
-// ── RENDER ──────────────────────────────────────────────
+// ── RENDER ──
 function renderDashboard(d) {
   document.getElementById('loading-state').style.display = 'none';
   document.getElementById('welcome-state').style.display = 'none';
-  document.getElementById('dashboard-content').style.display = 'block';
   document.getElementById('error-state').style.display = 'none';
+  document.getElementById('dashboard-content').style.display = 'block';
 
   // Risk pill
   const pill = document.getElementById('risk-pill');
-  const rm = {'ALTO':['risk-high','⚠ RIESGO ALTO'],'MEDIO':['risk-med','◆ RIESGO MEDIO'],'BAJO':['risk-low','✓ RIESGO BAJO']};
-  const [cls,lbl] = rm[d.riesgo]||['risk-med','◆ RIESGO MEDIO'];
-  pill.className='risk-pill '+cls; pill.textContent=lbl;
+  const rm = { ALTO:['risk-high','⚠ RIESGO ALTO'], MEDIO:['risk-med','◆ RIESGO MEDIO'], BAJO:['risk-low','✓ RIESGO BAJO'] };
+  const [cls, lbl] = rm[d.riesgo] || ['risk-med','◆ RIESGO MEDIO'];
+  pill.className = 'risk-pill ' + cls;
+  pill.textContent = lbl;
 
   // ── BIAS ──
   if (d.bias_dxy) {
-    document.getElementById('bias-sesion').textContent = d.bias_sesion||'—';
-    document.getElementById('bias-updated').textContent = 'Generado: '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-    const cc = {bull:'var(--up)',bear:'var(--down)',neut:'var(--warn)'};
-    document.getElementById('bias-body').innerHTML =
-      [d.bias_dxy, d.bias_eurusd, d.bias_gbpusd].map(b=>`
-        <div class="bias-instrument ${b.clase}">
-          <div class="bias-inst-name">${b.instrumento}</div>
-          <div class="bias-verdict ${b.clase}">${b.direccion}</div>
-          <div class="bias-confidence">CONFIANZA ${b.confianza}%</div>
+    document.getElementById('bias-sesion').textContent = d.bias_sesion || '—';
+    document.getElementById('bias-updated').textContent =
+      'Generado: ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    const cc = { bull:'var(--up)', bear:'var(--down)', neut:'var(--warn)' };
+
+    const instrHtml = [d.bias_dxy, d.bias_eurusd, d.bias_gbpusd].map(b => `
+      <div class="bias-instrument ${b.clase}">
+        <div class="bias-inst-name">${b.instrumento}</div>
+        <div class="bias-verdict ${b.clase}">${b.direccion}</div>
+        <div class="bias-confianza-row">
           <div class="bias-conf-bar"><div class="bias-conf-fill" style="width:${b.confianza}%;background:${cc[b.clase]||'var(--warn)'}"></div></div>
-          <div class="bias-inst-reason">${b.razon}</div>
-          <div class="bias-accion ${b.clase}">→ ${b.accion}</div>
-        </div>`).join('') +
-      `<div class="bias-summary">
+          <span class="bias-conf-num">${b.confianza}%</span>
+        </div>
+        <div class="bias-inst-reason">${b.razon}</div>
+        <div class="bias-accion ${b.clase}">→ ${b.accion}</div>
+      </div>`).join('');
+
+    const escHtml = d.escenario_alcista ? `
+      <div class="bias-escenarios">
+        <div class="bias-escenario"><strong>▲ ESCENARIO ALCISTA (EUR/GBP)</strong>${d.escenario_alcista}</div>
+        <div class="bias-escenario"><strong>▼ ESCENARIO BAJISTA (EUR/GBP)</strong>${d.escenario_bajista}</div>
+      </div>` : '';
+
+    const summaryHtml = `
+      <div class="bias-summary">
         <div class="bias-summary-label">RESUMEN EJECUTIVO</div>
-        <div class="bias-summary-text">${d.resumen_bias||'—'}</div>
-        <div class="bias-regla">📌 ${d.regla_dia||'—'}</div>
+        <div class="bias-summary-text">${d.resumen_bias || '—'}</div>
+        <div class="bias-regla">📌 ${d.regla_dia || '—'}</div>
+        ${escHtml}
       </div>`;
+
+    document.getElementById('bias-body').innerHTML = instrHtml + summaryHtml;
   }
 
   // ── NOTICIAS ──
   if (d.noticias_hoy) {
-    document.getElementById('noticias-ts').textContent = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})+' · web search';
-    const em = {USD_SUBE:'efecto-down',USD_BAJA:'efecto-up',EUR_SUBE:'efecto-up',EUR_BAJA:'efecto-down',GBP_SUBE:'efecto-up',GBP_BAJA:'efecto-down',VOLATILIDAD:'efecto-warn'};
-    const el = {USD_SUBE:'USD ↑',USD_BAJA:'USD ↓',EUR_SUBE:'EUR ↑',EUR_BAJA:'EUR ↓',GBP_SUBE:'GBP ↑',GBP_BAJA:'GBP ↓',VOLATILIDAD:'⚡ VOLATIL'};
-    document.getElementById('noticias-list').innerHTML = d.noticias_hoy.map(n=>`
-      <li class="noticia-item">
-        <span class="noticia-impacto ${n.impacto==='ALTO'?'i-high':'i-med'}">■■${n.impacto==='ALTO'?'■':''}<br>${n.impacto}</span>
-        <div><div class="noticia-titular">${n.titular}</div><div class="noticia-detalle">${n.detalle}</div></div>
-        <div class="noticia-efecto ${em[n.efecto_divisa]||'efecto-warn'}">${el[n.efecto_divisa]||n.par_afectado}</div>
-      </li>`).join('');
-  }
+    document.getElementById('noticias-ts').textContent =
+      new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) + ' · web search';
 
-  // ── MACRO GLOBAL ──
-  const cm={warn:'var(--warn)',down:'var(--down)',up:'var(--up)',blue:'var(--accent3)'};
-  if (d.paises) {
-    document.getElementById('country-cards').innerHTML = d.paises.map(p=>`
-      <div class="country-card">
-        <div class="country-flag">${p.bandera}</div>
-        <div class="country-name">${p.pais}</div>
-        <div class="country-status">${p.estado}</div>
-        <div class="country-detail">${p.detalle}</div>
-        <span class="country-badge badge-${p.badge_tipo}">${p.badge_texto}</span>
-      </div>`).join('');
-  }
-  if (d.narrativa_usd&&d.narrativa_eur) {
-    document.getElementById('macro-narratives').innerHTML = `
-      <div class="card"><div class="card-label">Narrativa USD</div><div class="card-title">${d.narrativa_usd.titulo}</div><div class="card-body">${d.narrativa_usd.cuerpo}<br><br><strong>→ ${d.narrativa_usd.conclusion}</strong></div></div>
-      <div class="card"><div class="card-label">Narrativa EUR</div><div class="card-title">${d.narrativa_eur.titulo}</div><div class="card-body">${d.narrativa_eur.cuerpo}<br><br><strong>→ ${d.narrativa_eur.conclusion}</strong></div></div>`;
-  }
-  if (d.temas_macro) {
-    document.getElementById('macro-cards').innerHTML = d.temas_macro.map((t,i)=>`
-      <div class="card" style="animation-delay:${i*0.05+0.05}s">
-        <div class="card-label">TEMA ${i+1}</div>
-        <div class="card-title" style="color:${cm[t.color]||'var(--text)'};">${t.emoji} ${t.titulo}</div>
-        <div class="card-body">${t.descripcion}</div>
-      </div>`).join('');
-  }
+    const efectoMap = {
+      USD_SUBE:    ['efecto-down','USD ↑'],
+      USD_BAJA:    ['efecto-up',  'USD ↓'],
+      EUR_SUBE:    ['efecto-up',  'EUR ↑'],
+      EUR_BAJA:    ['efecto-down','EUR ↓'],
+      GBP_SUBE:    ['efecto-up',  'GBP ↑'],
+      GBP_BAJA:    ['efecto-down','GBP ↓'],
+      VOLATILIDAD: ['efecto-warn','⚡ VOLAT']
+    };
 
-  // ── DXY ──
-  if (d.dxy_analisis) {
-    const bm={bull:'bullish',bear:'bearish',neut:'neutral'};
-    document.getElementById('dxy-grid').innerHTML = d.dxy_analisis.map(inst=>`
-      <div class="dxy-card">
-        <div class="dxy-name">${inst.nombre}</div>
-        <div class="dxy-precio">${inst.precio_ref}</div>
-        <span class="dxy-badge bias-tag ${bm[inst.clase]||'neutral'}">${inst.tendencia}</span>
-        <div class="dxy-niveles">
-          <div class="dxy-nivel"><div class="dxy-nivel-lbl">SOPORTE 1</div><div class="dxy-nivel-val s">${inst.soporte1}</div></div>
-          <div class="dxy-nivel"><div class="dxy-nivel-lbl">RESIST. 1</div><div class="dxy-nivel-val r">${inst.resistencia1}</div></div>
-          <div class="dxy-nivel"><div class="dxy-nivel-lbl">SOPORTE 2</div><div class="dxy-nivel-val s">${inst.soporte2}</div></div>
-          <div class="dxy-nivel"><div class="dxy-nivel-lbl">RESIST. 2</div><div class="dxy-nivel-val r">${inst.resistencia2}</div></div>
+    document.getElementById('noticias-list').innerHTML = d.noticias_hoy.map(n => {
+      const [efClass, efLabel] = efectoMap[n.efecto_divisa] || ['efecto-warn', n.par_afectado || '?'];
+      return `<li class="noticia-item">
+        <span class="noticia-impacto ${n.impacto==='ALTO' ? 'ni-alto' : 'ni-medio'}">${n.impacto}</span>
+        <div>
+          <div class="noticia-titular">${n.titular}</div>
+          <div class="noticia-detalle">${n.detalle}</div>
+          <div class="noticia-par">${n.par_afectado}</div>
         </div>
-        <div class="dxy-analisis">${inst.analisis}</div>
-      </div>`).join('');
-  }
-  if (d.dxy_interpretacion) {
-    document.getElementById('dxy-interpretacion').innerHTML = d.dxy_interpretacion.map(i=>`
-      <div class="card"><div class="card-label">Interpretación</div><div class="card-title">${i.titulo}</div><div class="card-body">${i.analisis}</div></div>`).join('');
-  }
-
-  // ── PARES ──
-  if (d.pares) {
-    document.getElementById('pares-cards').innerHTML = d.pares.map(p=>{
-      const bp=Math.min(Math.max(p.sentimiento_bulls||50,10),90);
-      const fc=p.sesgo_tipo==='bullish'?'var(--up)':p.sesgo_tipo==='bearish'?'var(--down)':'var(--warn)';
-      return `<div class="card">
-        <div class="card-label">PAR PRINCIPAL</div>
-        <div class="pair-header"><div class="pair-name">${p.nombre}</div><div class="bias-tag ${p.sesgo_tipo}">${p.sesgo}</div></div>
-        <div class="card-body" style="margin-bottom:12px;">${p.resumen}</div>
-        <div class="pair-levels">
-          <div class="level-box"><div class="level-label">SOPORTE 1</div><div class="level-value sup">${p.soporte1}</div></div>
-          <div class="level-box"><div class="level-label">PRECIO REF.</div><div class="level-value cur">${p.precio_ref}</div></div>
-          <div class="level-box"><div class="level-label">RESIST. 1</div><div class="level-value res">${p.resistencia1}</div></div>
-          <div class="level-box"><div class="level-label">SOPORTE 2</div><div class="level-value sup">${p.soporte2}</div></div>
-          <div class="level-box"></div>
-          <div class="level-box"><div class="level-label">RESIST. 2</div><div class="level-value res">${p.resistencia2}</div></div>
+        <div class="noticia-efecto-col">
+          <div class="noticia-efecto ${efClass}">${efLabel}</div>
         </div>
-        <div class="pair-section-title" style="margin-top:16px;">Sentimiento</div>
-        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;margin-bottom:4px;">
-          <span style="color:var(--up);">BULLS ${bp}%</span><span style="color:var(--down);">BEARS ${100-bp}%</span>
-        </div>
-        <div class="sentiment-track"><div class="sentiment-fill" style="width:${bp}%;background:${fc};"></div></div>
-        <div class="pair-section-title">Drivers Fundamentales</div>
-        <ul class="driver-list">${p.drivers.map(dr=>`<li>${dr}</li>`).join('')}</ul>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:14px;">
-          <div style="background:var(--bg);padding:12px;"><div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);margin-bottom:4px;">⚠ RIESGO</div><div style="font-size:11px;color:var(--down);">${p.riesgo_principal}</div></div>
-          <div style="background:var(--bg);padding:12px;"><div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);margin-bottom:4px;">✓ OPORTUNIDAD</div><div style="font-size:11px;color:var(--up);">${p.oportunidad}</div></div>
-        </div>
-      </div>`;
+      </li>`;
     }).join('');
   }
-  if (d.correlaciones) {
-    document.getElementById('correlaciones').innerHTML = d.correlaciones.map(c=>`
-      <div class="corr-cell"><div class="corr-event">${c.evento}</div><div class="corr-effect">${c.efecto}</div></div>`).join('');
-  }
 
-  // ── BANCOS ──
-  if (d.bancos_centrales) {
-    const sc={dovish:'dovish',hawkish:'hawkish','cb-neutral':'cb-neutral',neutral:'cb-neutral'};
-    document.getElementById('bancos-tabla').innerHTML = d.bancos_centrales.map(b=>`
-      <div class="cb-row">
-        <div class="cb-info"><div class="cb-name">${b.nombre}</div><div class="cb-detail">${b.detalle}</div><div class="cb-policy">${b.politica}</div></div>
-        <div class="cb-right">
-          <div class="cb-rate">${b.tasa}</div>
-          <div class="cb-stance ${sc[b.stance_tipo]||'cb-neutral'}">${b.stance}</div>
-          <div class="cb-next">Próx: ${b.proxima_reunion}</div>
-          <div style="font-size:10px;color:var(--accent3);font-family:'Space Mono',monospace;text-align:right;max-width:200px;">${b.expectativa}</div>
+  // ── DXY / EUR / GBP ──
+  if (d.instrumentos) {
+    document.getElementById('inst-cards').innerHTML = d.instrumentos.map(inst => `
+      <div class="inst-card ${inst.clase||'neut'}">
+        <div class="inst-card-top">
+          <div>
+            <div class="inst-name">${inst.nombre}</div>
+            <div class="inst-precio">${inst.precio_ref}</div>
+          </div>
+          <span class="inst-badge ${inst.clase||'neut'}">${inst.tendencia}</span>
         </div>
+        <div class="inst-niveles">
+          <div class="inst-nivel"><div class="inst-nivel-lbl">SOPORTE 1</div><div class="inst-nivel-val s">${inst.soporte1}</div></div>
+          <div class="inst-nivel"><div class="inst-nivel-lbl">RESIST. 1</div><div class="inst-nivel-val r">${inst.resistencia1}</div></div>
+          <div class="inst-nivel"><div class="inst-nivel-lbl">SOPORTE 2</div><div class="inst-nivel-val s">${inst.soporte2}</div></div>
+          <div class="inst-nivel"><div class="inst-nivel-lbl">RESIST. 2</div><div class="inst-nivel-val r">${inst.resistencia2}</div></div>
+        </div>
+        <div class="inst-analisis">${inst.analisis}</div>
       </div>`).join('');
   }
-  if (d.divergencias) {
-    document.getElementById('bancos-divergencia').innerHTML = d.divergencias.map(dv=>`
-      <div class="diff-card"><div class="diff-pair">${dv.par}</div><div class="diff-arrow">${dv.flecha}</div><div class="diff-spread">${dv.spread}</div><div class="diff-analysis">${dv.analisis}</div></div>`).join('');
-  }
-  if (d.perspectivas) {
-    document.getElementById('bancos-perspectivas').innerHTML = d.perspectivas.map(pv=>`
-      <div class="card"><div class="card-label">${pv.banco}</div><div class="card-title">${pv.titulo}</div><div class="card-body">${pv.analisis}</div></div>`).join('');
-  }
 
-  // ── CATALIZADORES ──
-  if (d.catalizadores) {
-    document.getElementById('cat-updated').textContent = 'Actualizado: '+new Date().toLocaleString('es-ES');
-    document.getElementById('catalysts-content').innerHTML = d.catalizadores.map(c=>`
-      <tr>
-        <td>${c.evento}</td>
-        <td><div class="cat-datetime">${c.fecha}</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px;">${c.hora}</div></td>
-        <td><span class="${c.impacto==='ALTO'?'i-high':'i-med'}">■■${c.impacto==='ALTO'?'■':''} ${c.impacto}</span></td>
-        <td style="color:var(--accent3);font-family:'Space Mono',monospace;font-size:11px;">${c.pares}</td>
-        <td><div class="prev-val">Prev: ${c.previo}</div><div class="cons-val">Cons: ${c.consenso}</div></td>
-        <td style="font-size:11px;color:var(--muted2);">${c.vigilar}</td>
-      </tr>`).join('');
-  }
+  const ctxCards = [];
+  if (d.contexto_dxy) ctxCards.push(`
+    <div class="dxy-ctx-card">
+      <div class="dxy-ctx-label">DXY — Contexto macro</div>
+      <div class="dxy-ctx-title">${d.contexto_dxy.titulo}</div>
+      <div class="dxy-ctx-body">${d.contexto_dxy.cuerpo}</div>
+      <div class="dxy-ctx-conclusion">→ ${d.contexto_dxy.conclusion}</div>
+    </div>`);
+  if (d.contexto_eurusd) ctxCards.push(`
+    <div class="dxy-ctx-card">
+      <div class="dxy-ctx-label">EUR/USD — Narrativa fundamental</div>
+      <div class="dxy-ctx-title">${d.contexto_eurusd.titulo}</div>
+      <div class="dxy-ctx-body">${d.contexto_eurusd.cuerpo}</div>
+      <div class="dxy-ctx-conclusion">→ ${d.contexto_eurusd.conclusion}</div>
+    </div>`);
+  if (ctxCards.length) document.getElementById('dxy-context').innerHTML = ctxCards.join('');
 
-  document.getElementById('last-updated').textContent = 'Última actualización: '+new Date().toLocaleString('es-ES');
+  document.getElementById('last-updated').textContent =
+    'Última actualización: ' + new Date().toLocaleString('es-ES');
 }
 </script>
 </body>
