@@ -487,7 +487,7 @@ async function fetchPrecios() {
 }
 
 // ── API CALL ──
-async function callAI(prompt, maxTokens=1000) {
+async function callAI(prompt, maxTokens=1200) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method:'POST',
     headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${apiKey}`, 'HTTP-Referer':location.href, 'X-Title':'MacroDesk' },
@@ -495,10 +495,20 @@ async function callAI(prompt, maxTokens=1000) {
       model: 'anthropic/claude-3.5-haiku',
       max_tokens: maxTokens,
       temperature: 0,
-      messages: [{ role:'user', content: prompt }]
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a JSON API. You MUST respond with ONLY a valid JSON object. No markdown, no backticks, no explanation, no preamble, no text before or after the JSON. Start your response with { and end with }. All strings must use straight double quotes. No trailing commas.'
+        },
+        { role:'user', content: prompt }
+      ]
     })
   });
-  if (!r.ok) { const e=await r.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${r.status}`); }
+  if (!r.ok) {
+    const e = await r.json().catch(()=>({}));
+    const msg = e.error?.message || `HTTP ${r.status}`;
+    throw new Error(`Error de API: ${msg}`);
+  }
   const d = await r.json();
   let txt = '';
   try {
@@ -509,15 +519,41 @@ async function callAI(prompt, maxTokens=1000) {
       txt = String(msg.content || '');
     }
   } catch(pe) {
-    throw new Error('API error: ' + JSON.stringify(d).slice(0,200));
+    throw new Error('Respuesta inesperada de la API: ' + JSON.stringify(d).slice(0,300));
   }
-  if (!txt.trim()) throw new Error('Respuesta vacia');
+  if (!txt.trim()) throw new Error('La IA devolvió una respuesta vacía');
+
+  // Clean and extract JSON
   txt = txt.trim();
-  const a=txt.indexOf('{'), b=txt.lastIndexOf('}');
-  if(a!==-1&&b!==-1) txt=txt.slice(a,b+1);
-  else throw new Error('La IA no devolvió JSON válido');
-  txt=txt.replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/,(\s*[}\]])/g,'$1').replace(/[\x00-\x09\x0b\x0c\x0e-\x1f]/g,' ');
-  return JSON.parse(txt);
+
+  // Remove markdown code fences if present
+  txt = txt.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/,'');
+  txt = txt.trim();
+
+  // Find first { and last }
+  const a = txt.indexOf('{');
+  const b = txt.lastIndexOf('}');
+
+  if (a === -1 || b === -1 || b < a) {
+    console.error('Respuesta sin JSON:', txt.slice(0, 400));
+    throw new Error(`La IA no devolvió JSON. Respuesta: "${txt.slice(0,120)}..."`);
+  }
+
+  txt = txt.slice(a, b + 1);
+
+  // Normalize characters
+  txt = txt
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/,(\s*[}\]])/g, '$1')         // trailing commas
+    .replace(/[\x00-\x09\x0b\x0c\x0e-\x1f]/g, ' ');  // control chars
+
+  try {
+    return JSON.parse(txt);
+  } catch(je) {
+    console.error('JSON parse error:', je.message, '\nTexto:', txt.slice(0,500));
+    throw new Error(`JSON inválido: ${je.message}. Fragmento: "${txt.slice(0,80)}..."`);
+  }
 }
 
 async function generateAnalysis() {
@@ -579,7 +615,7 @@ Datos macro reales hoy:
     setStep(4,'run');
     const p4 = callAI(`${BASE}
 Analisis tecnico-macro real DXY y pares hoy + datos pares detallados:
-{"dxy_analisis":[{"nombre":"DXY","precio_ref":"104.20","tendencia":"BAJISTA","clase":"bear","soporte1":"103.50","soporte2":"102.80","resistencia1":"105.00","resistencia2":"105.80","analisis":"analisis real DXY hoy macro tecnico 2 frases"},{"nombre":"EUR/USD","precio_ref":"1.0850","tendencia":"ALCISTA","clase":"bull","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","analisis":"analisis real EURUSD hoy"},{"nombre":"GBP/USD","precio_ref":"1.2650","tendencia":"NEUTRAL","clase":"neut","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","analisis":"analisis real GBPUSD hoy"}],"dxy_interpretacion":[{"titulo":"DXY vs EUR/USD — Correlacion inversa","analisis":"como afecta DXY a EURUSD ahora real"},{"titulo":"DXY vs GBP/USD — Contexto actual","analisis":"como afecta DXY a GBPUSD ahora real"}],"pares":[{"nombre":"EUR/USD","sesgo":"ALCISTA","sesgo_tipo":"bullish","resumen":"resumen real hoy","precio_ref":"1.0850","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","sentimiento_bulls":55,"drivers":["driver real 1","driver real 2","driver real 3","driver real 4","driver real 5"],"riesgo_principal":"riesgo real","oportunidad":"oportunidad real hoy"},{"nombre":"GBP/USD","sesgo":"NEUTRAL","sesgo_tipo":"neutral","resumen":"resumen real hoy","precio_ref":"1.2650","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","sentimiento_bulls":48,"drivers":["driver real 1","driver real 2","driver real 3","driver real 4","driver real 5"],"riesgo_principal":"riesgo real","oportunidad":"oportunidad real"}],"correlaciones":[{"evento":"PETROLEO UP","efecto":"USD sube"},{"evento":"RIESGO ON","efecto":"USD baja"},{"evento":"FED DOVISH","efecto":"USD baja"},{"evento":"ARANCELES USA","efecto":"Volatil"},{"evento":"GEOPOLITICA","efecto":"USD sube"},{"evento":"FISCAL EU","efecto":"EUR sube"},{"evento":"DATOS UK DEBILES","efecto":"GBP baja"},{"evento":"BOE DOVISH","efecto":"GBP baja"},{"evento":"RISK OFF","efecto":"CHF/JPY suben"}]}`, 1200);
+{"dxy_analisis":[{"nombre":"DXY","precio_ref":"104.20","tendencia":"BAJISTA","clase":"bear","soporte1":"103.50","soporte2":"102.80","resistencia1":"105.00","resistencia2":"105.80","analisis":"analisis real DXY hoy macro tecnico 2 frases"},{"nombre":"EUR/USD","precio_ref":"1.0850","tendencia":"ALCISTA","clase":"bull","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","analisis":"analisis real EURUSD hoy"},{"nombre":"GBP/USD","precio_ref":"1.2650","tendencia":"NEUTRAL","clase":"neut","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","analisis":"analisis real GBPUSD hoy"}],"dxy_interpretacion":[{"titulo":"DXY vs EUR/USD — Correlacion inversa","analisis":"como afecta DXY a EURUSD ahora real"},{"titulo":"DXY vs GBP/USD — Contexto actual","analisis":"como afecta DXY a GBPUSD ahora real"}],"pares":[{"nombre":"EUR/USD","sesgo":"ALCISTA","sesgo_tipo":"bullish","resumen":"resumen real hoy","precio_ref":"1.0850","soporte1":"1.0780","soporte2":"1.0700","resistencia1":"1.0950","resistencia2":"1.1050","sentimiento_bulls":55,"drivers":["driver real 1","driver real 2","driver real 3","driver real 4","driver real 5"],"riesgo_principal":"riesgo real","oportunidad":"oportunidad real hoy"},{"nombre":"GBP/USD","sesgo":"NEUTRAL","sesgo_tipo":"neutral","resumen":"resumen real hoy","precio_ref":"1.2650","soporte1":"1.2550","soporte2":"1.2450","resistencia1":"1.2750","resistencia2":"1.2850","sentimiento_bulls":48,"drivers":["driver real 1","driver real 2","driver real 3","driver real 4","driver real 5"],"riesgo_principal":"riesgo real","oportunidad":"oportunidad real"}],"correlaciones":[{"evento":"PETROLEO UP","efecto":"USD sube"},{"evento":"RIESGO ON","efecto":"USD baja"},{"evento":"FED DOVISH","efecto":"USD baja"},{"evento":"ARANCELES USA","efecto":"Volatil"},{"evento":"GEOPOLITICA","efecto":"USD sube"},{"evento":"FISCAL EU","efecto":"EUR sube"},{"evento":"DATOS UK DEBILES","efecto":"GBP baja"},{"evento":"BOE DOVISH","efecto":"GBP baja"},{"evento":"RISK OFF","efecto":"CHF/JPY suben"}]}`, 2000);
 
     const [r3, r4] = await Promise.all([p3, p4]);
     setStep(3,'done'); setStep(4,'done');
@@ -588,7 +624,7 @@ Analisis tecnico-macro real DXY y pares hoy + datos pares detallados:
     setStep(5,'run');
     const r5 = await callAI(`${BASE}
 Bancos centrales reales y proximos catalizadores con fechas:
-{"bancos_centrales":[{"nombre":"Fed EEUU","tasa":"4.50%","stance":"DOVISH","stance_tipo":"dovish","detalle":"detalle real breve","politica":"politica monetaria real actual","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"BCE Eurozona","tasa":"2.50%","stance":"NEUTRAL","stance_tipo":"cb-neutral","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"BoE UK","tasa":"4.50%","stance":"DOVISH","stance_tipo":"dovish","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"SNB Suiza","tasa":"0.25%","stance":"NEUTRAL","stance_tipo":"cb-neutral","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"}],"divergencias":[{"par":"Fed vs BCE","spread":"2.00%","flecha":"↑","analisis":"efecto real EUR/USD"},{"par":"Fed vs BoE","spread":"0.00%","flecha":"→","analisis":"efecto real GBP/USD"},{"par":"BCE vs SNB","spread":"2.25%","flecha":"↑","analisis":"efecto real CHF"}],"perspectivas":[{"banco":"Fed","titulo":"perspectiva Fed real","analisis":"analisis detallado perspectiva Fed proximos meses"},{"banco":"BCE","titulo":"perspectiva BCE real","analisis":"analisis detallado perspectiva BCE proximos meses"}],"catalizadores":[{"evento":"NFP USA","fecha":"03 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"151K","consenso":"160K","vigilar":"detalle real"},{"evento":"CPI USA","fecha":"10 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.8%","consenso":"2.7%","vigilar":"detalle real"},{"evento":"BCE Reunion","fecha":"17 Abr 2026","hora":"12:15 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.50%","consenso":"2.25%","vigilar":"detalle real"},{"evento":"PCE Core","fecha":"30 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.6%","consenso":"2.5%","vigilar":"detalle real"},{"evento":"FOMC Decision","fecha":"07 May 2026","hora":"19:00 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"4.50%","consenso":"4.50%","vigilar":"detalle real"},{"evento":"BoE Reunion","fecha":"08 May 2026","hora":"12:00 UTC","impacto":"ALTO","pares":"GBP/USD","previo":"4.50%","consenso":"4.25%","vigilar":"detalle real"},{"evento":"IPC Eurozona","fecha":"30 Abr 2026","hora":"10:00 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.3%","consenso":"2.2%","vigilar":"detalle real"},{"evento":"GDP UK Q1","fecha":"15 May 2026","hora":"07:00 UTC","impacto":"MEDIO","pares":"GBP/USD","previo":"-0.1%","consenso":"0.2%","vigilar":"detalle real"}]}`, 1300);
+{"bancos_centrales":[{"nombre":"Fed EEUU","tasa":"4.50%","stance":"DOVISH","stance_tipo":"dovish","detalle":"detalle real breve","politica":"politica monetaria real actual","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"BCE Eurozona","tasa":"2.50%","stance":"NEUTRAL","stance_tipo":"cb-neutral","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"BoE UK","tasa":"4.50%","stance":"DOVISH","stance_tipo":"dovish","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"},{"nombre":"SNB Suiza","tasa":"0.25%","stance":"NEUTRAL","stance_tipo":"cb-neutral","detalle":"detalle real","politica":"politica real","proxima_reunion":"fecha real","expectativa":"expectativa real"}],"divergencias":[{"par":"Fed vs BCE","spread":"2.00%","flecha":"↑","analisis":"efecto real EUR/USD"},{"par":"Fed vs BoE","spread":"0.00%","flecha":"→","analisis":"efecto real GBP/USD"},{"par":"BCE vs SNB","spread":"2.25%","flecha":"↑","analisis":"efecto real CHF"}],"perspectivas":[{"banco":"Fed","titulo":"perspectiva Fed real","analisis":"analisis detallado perspectiva Fed proximos meses"},{"banco":"BCE","titulo":"perspectiva BCE real","analisis":"analisis detallado perspectiva BCE proximos meses"}],"catalizadores":[{"evento":"NFP USA","fecha":"03 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"151K","consenso":"160K","vigilar":"detalle real"},{"evento":"CPI USA","fecha":"10 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.8%","consenso":"2.7%","vigilar":"detalle real"},{"evento":"BCE Reunion","fecha":"17 Abr 2026","hora":"12:15 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.50%","consenso":"2.25%","vigilar":"detalle real"},{"evento":"PCE Core","fecha":"30 Abr 2026","hora":"13:30 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.6%","consenso":"2.5%","vigilar":"detalle real"},{"evento":"FOMC Decision","fecha":"07 May 2026","hora":"19:00 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"4.50%","consenso":"4.50%","vigilar":"detalle real"},{"evento":"BoE Reunion","fecha":"08 May 2026","hora":"12:00 UTC","impacto":"ALTO","pares":"GBP/USD","previo":"4.50%","consenso":"4.25%","vigilar":"detalle real"},{"evento":"IPC Eurozona","fecha":"30 Abr 2026","hora":"10:00 UTC","impacto":"ALTO","pares":"EUR/USD","previo":"2.3%","consenso":"2.2%","vigilar":"detalle real"},{"evento":"GDP UK Q1","fecha":"15 May 2026","hora":"07:00 UTC","impacto":"MEDIO","pares":"GBP/USD","previo":"-0.1%","consenso":"0.2%","vigilar":"detalle real"}]}`, 2000);
     setStep(5,'done');
 
     const parsed = { ...r1, ...r2, ...r3, ...r4, ...r5 };
@@ -597,10 +633,10 @@ Bancos centrales reales y proximos catalizadores con fechas:
     setStatus('ACTUALIZADO');
 
   } catch(e) {
-    console.error(e);
+    console.error('Error en análisis:', e);
     document.getElementById('loading-state').style.display='none';
     document.getElementById('error-state').style.display='block';
-    document.getElementById('error-msg').textContent = e.message||'Error desconocido.';
+    document.getElementById('error-msg').textContent = e.message || 'Error desconocido. Abre la consola del navegador (F12) para más detalles.';
     setStatus('ERROR', false);
   } finally {
     btn.disabled = false;
